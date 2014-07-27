@@ -1,0 +1,119 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/backbone")
+
+    @Scripts.Render("~/Scripts/cl/asset/model.js")
+    @Scripts.Render("~/Scripts/cl/asset/collection.js")
+
+    @Scripts.Render("~/Scripts/cl/asset/view-item-asset-type.js")
+    @Scripts.Render("~/Scripts/cl/asset/view-item.js")
+    @Scripts.Render("~/Scripts/cl/asset/view-main.js")
+
+    <script type="text/template" id="item-template">
+        <div class="view">
+          <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
+          <label><%- title %></label>
+          <a class="destroy"></a>
+        </div>
+        <input class="edit" type="text" value="<%- title %>" />
+  </script> 
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h2>Assets</h2>
+
+        <div class="btn-add-asset">
+            <button id="btn-add-asset" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-add-asset">Add Asset</button>
+        </div>
+        <div class="table-responsive">
+            <table id="tbl-assets" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Tags</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="modal-add-asset" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <form role="form">
+            <div class="form-group">
+                <div class="radio">
+                    <label class="col-lg-4">
+                        <input type="radio" name="asset_type" id="asset_type_photo" value="1" checked="">Photo
+                    </label>
+                    <label class="col-lg-4">
+                        <input type="radio" name="asset_type" id="asset_type_animation" value="2">Animation
+                    </label>
+                     <label class="col-lg-4">
+                        <input type="radio" name="asset_type" id="asset_type_youtube" value="3">You Tube
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Url</label>
+                <input type="text" class="form-control" rows="3" />
+            </div>
+            <div class="form-group">
+                <label>Tags</label>
+                <input type="text" class="form-control ctl-tag"  data-role="tagsinput"/>
+                <p class="help-block">Press 'Return' after each tag.</p>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/template" id="asset-item">
+    <td class="icon"><!-- Asset Type Icon Injected here --></td>
+    <td class="title"><a href="<%- url %>" target="_blank"><%- title %></a></td>
+    <td class="desc"><%- desc %></td>
+    <td class="tags">
+        <% 
+            var strTags = "";
+            _.each(tags, function(t) { %>
+                <% strTags += (t.name + ", ") %>
+          <% }); if(strTags && strTags.length > 0) { strTags = strTags.substring(0, strTags.length - 2); }%>
+
+        <%- strTags %>
+    </td>
+    <td>
+        <div class="fa fa-fw fa-pencil-square-o asset-edit"></div>
+        <div class="fa fa-fw fa-trash-o asset-remove"></div>
+    </td>
+</script>                  
