@@ -1,0 +1,13 @@
+CL.Web/CL.Services.Business/bin/
+CL.Web/CL.Services.Business/obj/
+CL.Web/CL.Services.Data/bin/
+CL.Web/CL.Services.Data/obj/
+CL.Web/CL.Web/bin/
+CL.Web/CL.Web/obj/
+CL.Web/CL.WebServices.Contracts/bin/
+CL.Web/CL.WebServices.Contracts/obj/
+CL.Web/CL.WebServices/bin/
+CL.Web/CL.WebServices/obj/
+*.suo
+*.dbmdl
+CL.Database/CL.Database/CL.Database.sqlproj.user
