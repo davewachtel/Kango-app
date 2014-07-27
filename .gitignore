@@ -11,3 +11,10 @@ CL.Web/CL.WebServices/obj/
 *.suo
 *.dbmdl
 CL.Database/CL.Database/CL.Database.sqlproj.user
+CL.Database/CL.Database/bin/
+CL.Database/CL.Database/obj/
+CL.Web/CL.Services.Web.Azure/csx/Debug/
+CL.Web/CL.Services.Web.Azure/obj/Debug/CL.Services.Web/bin/Microsoft.Data.Edm.dll
+CL.Web/CL.Services.Web.Azure/obj/
+CL.Web/CL.Services.Web.Azure/bin/
+CL.Web/CL.Services.Web.Azure/rcf/Debug/
