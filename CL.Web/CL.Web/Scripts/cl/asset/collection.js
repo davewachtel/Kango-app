@@ -6,7 +6,7 @@
     },
     model: AssetModel,
 
-    url: '/services/api/asset',
+    url: CL.url + '/api/asset',
 
     parse: function (resp) {
         if (resp) {

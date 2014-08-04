@@ -40,12 +40,21 @@ namespace CL.Services.Business.Assets
                 return repo.Insert(asset);
             }
         }
-        /*
-        public static bool Update(IAsset asset)
+        
+        public static int Update(int id, IAsset asset)
         {
+            if (asset.Id <= 0)
+                throw new ArgumentException("Asset Id must be 0.");
 
+            if (asset.Id != id)
+                throw new ArgumentException("Asset Id must match Id.");
+
+            using (AssetRepository repo = new AssetRepository())
+            {
+                return repo.Update(id, asset);
+            }
         }
-        */
+        
         public static int Delete(int assetId)
         {
              if (assetId <= 0)

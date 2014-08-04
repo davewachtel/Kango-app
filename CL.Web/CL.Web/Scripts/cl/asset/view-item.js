@@ -1,31 +1,44 @@
 ﻿var AssetItem = Backbone.View.extend({
     tagName: "tr",
 
+    dialog: null,
+
     events: {
-        
         "click .asset-edit": "edit",
         "click .asset-remove": "destroy"
     },
 
     template: _.template($("#asset-item").html()),
 
-    initialize: function ()
+    initialize: function (options)
     {
+        if(options && options.dialog)
+            this.dialog = options.dialog;
+
         this.listenTo(this.model, "change", this.render);
     },
 
-    edit:function(){
-        console.log("Edit: " + this.model.get('id'));
+    edit: function() {
+
+        if(this.dialog)
+        {
+            var self = this;
+            this.dialog.show(this.model);
+        }
     },
 
     destroy: function () {
-        
-        console.log("Delete: " + this.model.get('id'));
-        this.model.destroy();
-
+        var self = this;
+        this.model.destroy({
+            success: function () {
+                self.render();
+                console.log("Delete: " + self.model.get('id'));
+            }
+        });
     },
 
     render: function () {
+
         var assetType = new AssetItemAssetType({ model: this.model });
         var $atHtml = assetType.render().$el;
 

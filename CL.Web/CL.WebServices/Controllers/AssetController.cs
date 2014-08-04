@@ -62,11 +62,15 @@ namespace CL.Services.Web.Controllers
 
         //PUT api/asset/1
         [HttpPut]
-        public IPutResponse UpdateAsset(int id, [FromBody]AssetModel model)
+        public IPutResponse UpdateAsset([FromUri]int id, [FromBody]AssetModel model)
         {
+            int count = 0;
+            if (id > 0)
+                count = Asset.Update(id, model.ToInterface());
+
             return new PutResponse()
             {
-                AffectedRecords = 0
+                AffectedRecords = count
             };
         }
 

@@ -6,11 +6,20 @@
 {
     @Scripts.Render("~/bundles/backbone")
 
+    <script type="text/javascript">
+        CL = {};
+        //CL.url = 'http://855972c0c5d14abaac73c31be85dbb39.cloudapp.net'
+        CL.url = '/Services';
+        //Backbone.emulateHTTP = true;
+    </script>
+
     @Scripts.Render("~/Scripts/cl/asset/model.js")
     @Scripts.Render("~/Scripts/cl/asset/collection.js")
 
+
     @Scripts.Render("~/Scripts/cl/asset/view-item-asset-type.js")
     @Scripts.Render("~/Scripts/cl/asset/view-item.js")
+    @Scripts.Render("~/Scripts/cl/asset/view-asset-dialog.js")
     @Scripts.Render("~/Scripts/cl/asset/view-main.js")
 
     <script type="text/template" id="item-template">
@@ -27,24 +36,26 @@
     <div class="col-lg-12">
         <h2>Assets</h2>
 
-        <div class="btn-add-asset">
-            <button id="btn-add-asset" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-add-asset">Add Asset</button>
-        </div>
-        <div class="table-responsive">
-            <table id="tbl-assets" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Tags</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                </tbody>
-            </table>
+        <div id="asset-container">
+            <div class="btn-add-asset">
+                <button id="btn-add-asset" type="button" class="btn btn-sm btn-primary">Add Asset</button>
+            </div>
+            <div class="table-responsive">
+                <table id="tbl-assets" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Tags</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -74,26 +85,26 @@
             </div>
             <div class="form-group">
                 <label>Title</label>
-                <input type="text" class="form-control" />
+                <input id="ad-title" type="text" class="form-control" />
             </div>
             <div class="form-group">
                 <label>Description</label>
-                <textarea class="form-control" rows="3"></textarea>
+                <textarea id="ad-desc" class="form-control" rows="3"></textarea>
             </div>
             <div class="form-group">
                 <label>Url</label>
-                <input type="text" class="form-control" rows="3" />
+                <input id="ad-url" type="text" class="form-control" rows="3" />
             </div>
             <div class="form-group">
                 <label>Tags</label>
-                <input type="text" class="form-control ctl-tag"  data-role="tagsinput"/>
+                <input id="ad-tags" type="text" class="form-control ctl-tag" />
                 <p class="help-block">Press 'Return' after each tag.</p>
             </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button id="modal-add-asset-close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="modal-add-asset-save" type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -102,7 +113,7 @@
 <script type="text/template" id="asset-item">
     <td class="icon"><!-- Asset Type Icon Injected here --></td>
     <td class="title"><a href="<%- url %>" target="_blank"><%- title %></a></td>
-    <td class="desc"><%- desc %></td>
+    <td class="desc"><%- description %></td>
     <td class="tags">
         <% 
             var strTags = "";
@@ -113,7 +124,7 @@
         <%- strTags %>
     </td>
     <td>
-        <div class="fa fa-fw fa-pencil-square-o asset-edit"></div>
+        <div class="fa fa-fw fa-pencil-square-o asset-edit" data-target="modal-add-asset"></div>
         <div class="fa fa-fw fa-trash-o asset-remove"></div>
     </td>
 </script>                  

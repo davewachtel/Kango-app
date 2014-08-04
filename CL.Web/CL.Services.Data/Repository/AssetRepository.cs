@@ -15,7 +15,7 @@ namespace CL.Services.Data.Repository
 
         public IAsset GetById(int id)
         {
-            var asset =  this.Context.Assets
+            var asset = this.Context.Assets
                             .Where(a => a.Id == id)
                             .Where(a => a.IsActive)
                             .Include(a => a.AssetTags.Select(at => at.Tags))
@@ -38,11 +38,11 @@ namespace CL.Services.Data.Repository
             var query = this.Context.Assets
                             .Where(a => a.IsActive)
                             .Include(a => a.AssetTags.Select(at => at.Tags));
-                            
+
 
             var pageQuery = this.PagedResult(query, pageNumber, pageSize, a => a.Title, true, out totalCount);
 
-            List <IAsset> lstResults = new List<IAsset>();
+            List<IAsset> lstResults = new List<IAsset>();
             foreach (Asset asset in pageQuery)
             {
                 var result = Mappers.CLMapper.MapAsset(asset);
@@ -56,15 +56,124 @@ namespace CL.Services.Data.Repository
             };
         }
 
+
         public IPostResponse Insert(IAsset asset)
         {
-            return null;
+            Asset entity = new Asset();
+            entity.AssetTypeId = (int)asset.AssetType;
+            entity.Title = asset.Title;
+            entity.Description = asset.Description;
+            entity.Url = asset.Url;
+            entity.IsActive = true;
+
+            this.ProcessTags(entity, asset);
+
+            this.Context.Assets.Add(entity);
+            int count = this.Context.SaveChanges();
+
+            return new PostResponse()
+            {
+                Id = entity.Id
+            };
         }
 
-        public IPutResponse Update()
+        private Context.Asset ProcessTags(Context.Asset asset, IAsset value)
         {
+            if (value.Tags == null || value.Tags.Count == 0)
+                return asset;
 
-            return null;
+            Dictionary<int, Context.Tag> dicExistingTags = this.GetTags(value);
+
+            //Remove Tags from Asset that don't match List.
+            //This means that the user has deleted some tags and we want to remove the association.
+            this.MarkAssetTagsForDelete(asset, dicExistingTags);
+
+            //Add Tags.
+            this.AddTags(asset, value, dicExistingTags);
+
+            return asset;
+        }
+
+        private void AddTags(Context.Asset asset, IAsset value, Dictionary<int, Context.Tag> dicExistingTags)
+        {
+            foreach (Contracts.Tag vtag in value.Tags)
+            {
+                //If not an existing tag, create a new tag.
+                Tag tag = dicExistingTags.Values.FirstOrDefault(t => t.Title.ToLower() == vtag.Name.ToLower());
+                if (tag == null)
+                {
+                    asset.AssetTags.Add(new AssetTag()
+                    {
+                        Asset = asset,
+                        Tags = new Tag()
+                                {
+                                    Title = vtag.Name,
+                                    IsActive = true
+                                }
+                    });
+                }
+                else if (!asset.AssetTags.Any(t => t.Tags.Id == tag.Id))
+                {
+                    asset.AssetTags.Add(new AssetTag()
+                    {
+                        Asset = asset,
+                        Tags = tag
+                    });
+                }
+            }
+        }
+
+        private void MarkAssetTagsForDelete(Context.Asset asset, Dictionary<int, Context.Tag> dicExistingTags)
+        {
+            if (asset.AssetTags != null)
+            {
+                for (int i = asset.AssetTags.Count - 1; i >= 0; i--)
+                {
+                    Context.AssetTag at = asset.AssetTags.ElementAt(i);
+                    if (!dicExistingTags.ContainsKey(at.TagId))
+                        this.Context.Entry(at).State = EntityState.Deleted;
+                }
+            }
+        }
+
+        private Dictionary<int, Context.Tag> GetTags(IAsset asset)
+        {
+            Dictionary<int, Context.Tag> tags = new Dictionary<int, Context.Tag>();
+            if (asset == null || asset.Tags == null || asset.Tags.Count == 0)
+                return tags;
+
+            IEnumerable<String> lstTags = asset.Tags.Select<Contracts.ITag, String>(t => t.Name);
+
+            tags = this.Context.Tags
+                    .Where(t => lstTags.Any(at => at.ToLower() == t.Title.ToLower() && t.IsActive))
+                    .ToDictionary(t => t.Id);
+
+            return tags;
+        }
+
+        public int Update(int id, IAsset asset)
+        {
+            if (id <= 0)
+                throw new ArgumentException("Asset Id must exceed 0.");
+
+            var entity = this.Context.Assets
+                             .Where(a => a.Id == id)
+                             .Where(a => a.IsActive)
+                             .Include(a => a.AssetTags.Select(at => at.Tags))
+                             .FirstOrDefault();
+
+            if (entity == null)
+                return 0;
+
+            entity.AssetTypeId = (int)asset.AssetType;
+            entity.Title = asset.Title;
+            entity.Description = asset.Description;
+            entity.Url = asset.Url;
+
+            this.ProcessTags(entity, asset);
+
+
+            return this.Context.SaveChanges();
         }
 
         public int Delete(int id)
@@ -80,11 +189,10 @@ namespace CL.Services.Data.Repository
             if (asset == null)
                 return 0;
 
-
             asset.IsActive = false;
             return this.Context.SaveChanges();
 
-             //return this.Context.Assets.Where(a => a.Id == assetId).Delete();
+            //return this.Context.Assets.Where(a => a.Id == assetId).Delete();
         }
     }
 }

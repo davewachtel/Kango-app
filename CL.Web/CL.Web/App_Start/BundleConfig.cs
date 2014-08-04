@@ -12,16 +12,19 @@ namespace CL.Web
                         "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                        "~/Scripts/bootstrap.min.js",
+                        "~/Scripts/bootstrap.js",
                         "~/Scripts/plugins/tagsinput/bootstrap-tagsinput.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/backbone").Include(
-                "~/Scripts/underscore.min.js",
-                "~/Scripts/backbone.min.js"));
+                "~/Scripts/underscore.js",
+                //"~/Scripts/underscore-min.map",
+                "~/Scripts/backbone.js"
+                //,"~/Scripts/backbone.min.map"
+                ));
 
             /* Content */
             bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
-                "~/Content/bootstrap.min.css",
+                "~/Content/bootstrap.css",
                 "~/Content/plugins/bootstrap-tagsinput.css",
                 "~/Content/cl.css"));
 
@@ -29,7 +32,7 @@ namespace CL.Web
                 "~/Content/sb-admin.css"));
 
             bundles.Add(new StyleBundle("~/Content/font-awesome").Include(
-                "~/font-awesome-4.1.0/css/font-awesome.min.css"));
+                "~/font-awesome-4.1.0/css/font-awesome.css"));
 
 
             bundles.IgnoreList.Clear();
