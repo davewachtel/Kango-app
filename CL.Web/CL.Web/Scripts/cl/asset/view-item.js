@@ -28,13 +28,18 @@
     },
 
     destroy: function () {
-        var self = this;
-        this.model.destroy({
-            success: function () {
-                self.render();
-                console.log("Delete: " + self.model.get('id'));
-            }
-        });
+        if (confirm("Are you sure you'd like to delete this item?"))
+        {
+            var self = this;
+
+            this.model.destroy({
+                success: function () {
+                    self.render();
+                    console.log("Delete: " + self.model.get('id'));
+                }
+            });
+        }
+
     },
 
     render: function () {

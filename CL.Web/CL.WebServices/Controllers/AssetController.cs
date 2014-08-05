@@ -6,9 +6,11 @@ using CL.Services.Web.TypeConverter;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace CL.Services.Web.Controllers
 {
+    [EnableCors(origins: "http://cornicelabs.azurewebsites.net", headers: "*", methods: "*")]
     public class AssetController : ApiController
     {
         //GET api/asset/1

@@ -251,8 +251,9 @@
     <Content Include="fonts\font-awesome-4.1.0\fonts\FontAwesome.otf" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.woff" />
-    <None Include="Properties\PublishProfiles\cornicelabs - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\cornicelabs - Web Deploy.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\cornicelabs.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -88,7 +88,6 @@
             });
         }
 
-        debugger;
         var asset = {
             assettype: assettype,
             title: title,
