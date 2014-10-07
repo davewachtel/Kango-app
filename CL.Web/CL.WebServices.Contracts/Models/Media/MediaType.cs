@@ -1,4 +1,4 @@
-﻿using CL.Services.Contracts.Assets;
+﻿using CL.Services.Contracts.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace CL.Services.Contracts
 {
-    public class AssetType : IAssetType
+    public class MediaType : IMediaType
     {
         public int Id { get; set; }
         public String Name { get; set; }
 
-        public AssetType(int id, String name)
+        public MediaType(int id, String name)
         {
             this.Id = id;
             this.Name = name;

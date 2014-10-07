@@ -43,6 +43,7 @@
     <Compile Include="Assets\AssetType.cs" />
     <Compile Include="Assets\PhotoAsset.cs" />
     <Compile Include="Assets\VideoAsset.cs" />
+    <Compile Include="Media\Media.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tag.cs" />
   </ItemGroup>

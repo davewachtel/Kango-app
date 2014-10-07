@@ -93,6 +93,7 @@
     <Compile Include="Repository\AssetRepository.cs" />
     <Compile Include="Repository\AssetTypeRepository.cs" />
     <Compile Include="Repository\CLRepository.cs" />
+    <Compile Include="Repository\MediaRepository.cs" />
     <Compile Include="Repository\TagRepository.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -67,6 +67,20 @@ namespace CL.Services.Data.Mappers
             return result;
         }
 
+        public static Contracts.Media.IMedia MapMedia(Asset asset)
+        {
+            if (asset == null)
+                return null;
+
+            Contracts.Media.Media result = new Contracts.Media.Media();
+            result.Id = asset.Id;
+            result.MediaType = (Contracts.MediaTypeEnum)asset.AssetTypeId;
+            result.Title = asset.Title;
+            result.Url = asset.Url;
+
+            return result;
+        }
+
         public static Contracts.ITag MapTag(Tag tag)
         {
             if (tag == null)

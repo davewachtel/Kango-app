@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Interfaces\Assets\IAsset.cs" />
     <Compile Include="Interfaces\Assets\IAssetType.cs" />
+    <Compile Include="Interfaces\Media\IMedia.cs" />
+    <Compile Include="Interfaces\Media\IMediaType.cs" />
     <Compile Include="Interfaces\Response\IDeleteResponse.cs" />
     <Compile Include="Interfaces\Response\IGetResponse.cs" />
     <Compile Include="Interfaces\Response\IPostResponse.cs" />
@@ -52,6 +54,8 @@
     <Compile Include="Interfaces\Tags\ITag.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Models\Assets\Asset.cs" />
+    <Compile Include="Models\Media\Media.cs" />
+    <Compile Include="Models\Media\MediaType.cs" />
     <Compile Include="Models\Responses\DeleteResponse.cs" />
     <Compile Include="Models\Responses\GetResponse.cs" />
     <Compile Include="Models\Responses\GetPagedResponse.cs" />

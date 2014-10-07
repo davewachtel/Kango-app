@@ -12,4 +12,11 @@
         Animation = 2,
         YouTube = 3
     }
+
+    public enum MediaTypeEnum
+    {
+        Photo = 1,
+        Animation = 2,
+        YouTube = 3
+    }
 }
