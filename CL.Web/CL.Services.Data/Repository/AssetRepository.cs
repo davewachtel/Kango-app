@@ -9,6 +9,7 @@ using EntityFramework.Extensions;
 
 namespace CL.Services.Data.Repository
 {
+
     public class AssetRepository : CLRepository
     {
         public AssetRepository() { }

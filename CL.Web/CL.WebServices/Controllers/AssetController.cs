@@ -10,6 +10,7 @@ using System.Web.Http.Cors;
 
 namespace CL.Services.Web.Controllers
 {
+    [Authorize]
     [EnableCors(origins: "http://cornicelabs.azurewebsites.net", headers: "*", methods: "*")]
     public class AssetController : ApiController
     {
