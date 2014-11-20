@@ -21,7 +21,7 @@ namespace CL.Services.Web
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = new DataProtectorTokenProvider<Contracts.IUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                manager.UserTokenProvider = new DataProtectorTokenProvider<Contracts.User>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
         }

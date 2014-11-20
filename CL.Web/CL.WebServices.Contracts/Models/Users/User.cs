@@ -6,10 +6,38 @@ using System.Threading.Tasks;
 
 namespace CL.Services.Contracts
 {
-    public class User : IUser
+    public class User : Contracts.IUser
     {
-        public string Id { get; set; }
+        public User()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+        public User(string userName)
+            : this()
+        {
+            this.UserName = userName;
+        }
 
-        public string UserName { get; set; }
+        public virtual string Id { get; set; }
+        public virtual string PasswordHash { get; set; }
+        public virtual string SecurityStamp { get; set; }
+        public virtual string UserName { get; set; }
+
+        public virtual string Email { get; set; }
+
+        public virtual bool EmailConfirmed { get; set; }
+
+        public static User ToUser(Contracts.IUser user)
+        {
+            return new User()
+            {
+                Id = user.Id,
+                PasswordHash = user.PasswordHash,
+                SecurityStamp = user.SecurityStamp,
+                UserName = user.UserName,
+                Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed
+            };
+        }
     }
 }

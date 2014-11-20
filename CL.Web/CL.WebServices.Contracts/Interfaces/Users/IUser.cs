@@ -9,6 +9,12 @@ namespace CL.Services.Contracts
 {
     public interface IUser : IUser<String>
     {
+        string PasswordHash { get; set; }
 
+        string SecurityStamp { get; set; }
+
+        string Email { get; set; }
+
+        bool EmailConfirmed { get; set; }
     }
 }

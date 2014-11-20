@@ -10,13 +10,13 @@ using System.Web.Http.Cors;
 
 namespace CL.Services.Web.Controllers
 {
-    [Authorize]
-    [EnableCors(origins: "http://cornicelabs.azurewebsites.net", headers: "*", methods: "*")]
+    [Authorize(Roles = "Admin")]
+    [RoutePrefix("Asset")]
     public class AssetController : ApiController
     {
         //GET api/asset/1
         [HttpGet]
-        public AssetModel GetAssetById(int id)
+public AssetModel GetAssetById(int id)
         {
             IAsset result = Asset.GetAssetById(id);
             var asset = AssetModel.Load(result);
@@ -32,7 +32,7 @@ namespace CL.Services.Web.Controllers
                 filter = new PagingFilter(1, 25);
 
             IPagedResponse<IAsset> results = Asset.GetAssets(filter.Page, filter.Size);
-            
+
             ICollection<AssetModel> assets = new List<AssetModel>();
             if (results.Data != null)
             {
@@ -46,7 +46,7 @@ namespace CL.Services.Web.Controllers
             return new PagedResponse<AssetModel>()
             {
                 TotalCount = results.TotalCount,
-                Data = assets   
+                Data = assets
             };
         }
 

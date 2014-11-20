@@ -7,20 +7,20 @@ using Microsoft.AspNet.Identity;
 
 namespace CL.Services.Business.User
 {
-    public class UserManager : UserManager<Contracts.IUser>
+    public class UserManager : UserManager<Contracts.User>
     {
-        public UserManager(IUserStore<Contracts.IUser> store)
+        public UserManager(IUserStore<Contracts.User> store)
             : base(store)
         {
         }
 
         public static UserManager Create()
         {
-            IUserStore<CL.Services.Contracts.IUser> store = Business.User.User.GetStore();
+            IUserStore<Contracts.User> store = Business.User.User.GetStore();
             var manager = new UserManager(store);
             
             // Configure validation logic for usernames
-            manager.UserValidator = new UserValidator<Contracts.IUser>(manager)
+            manager.UserValidator = new UserValidator<Contracts.User>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
@@ -29,10 +29,10 @@ namespace CL.Services.Business.User
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequireNonLetterOrDigit = false,
+                RequireDigit = false,
+                RequireLowercase = false,
+                RequireUppercase = false,
             };
 
             return manager;

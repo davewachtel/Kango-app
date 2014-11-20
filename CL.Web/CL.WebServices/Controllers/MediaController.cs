@@ -12,7 +12,8 @@ using System.Web.Http.Cors;
 
 namespace CL.Services.Web.Controllers
 {
-    [EnableCors(origins: "http://cornicelabs.azurewebsites.net", headers: "*", methods: "*")]
+    [Authorize]
+    [RoutePrefix("Media")]
     public class MediaController : ApiController
     {
         // GET api/media

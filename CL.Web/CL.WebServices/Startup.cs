@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using Microsoft.Owin;
 using Owin;
+using System.Web.Http;
+using System.Web.Mvc;
 
 [assembly: OwinStartup(typeof(CL.Services.Web.Startup))]
 
@@ -13,6 +15,14 @@ namespace CL.Services.Web
     {
         public void Configuration(IAppBuilder app)
         {
+            HttpConfiguration config = new HttpConfiguration();
+            WebApiConfig.Register(config);
+            app.UseWebApi(config);
+
+            //GlobalConfiguration.Configure(WebApiConfig.Register);
+            //GlobalConfiguration.Configure(SerializationConfig.Register);
+            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+
             ConfigureAuth(app);
         }
     }

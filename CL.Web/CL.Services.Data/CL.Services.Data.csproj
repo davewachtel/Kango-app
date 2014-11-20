@@ -96,14 +96,13 @@
       <DependentUpon>CLContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Mappers\CLMapper.cs" />
-    <Compile Include="Model\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AssetRepository.cs" />
     <Compile Include="Repository\AssetTypeRepository.cs" />
     <Compile Include="Repository\CLRepository.cs" />
+    <Compile Include="Repository\LoginRepository.cs" />
     <Compile Include="Repository\MediaRepository.cs" />
     <Compile Include="Repository\TagRepository.cs" />
-    <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CL.WebServices.Contracts\CL.Services.Contracts.csproj">

@@ -9,11 +9,86 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using CL.Services.Web.Models.User;
+using CL.Services.Web.Repository;
 
 namespace CL.Services.Web.Providers
 {
+    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
+    {
+        public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+        {
+            context.Validated();
+        }
+
+        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+        {
+
+            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+            var userManager = context.OwinContext.GetUserManager<Business.User.UserManager>();
+
+            using (AuthenticationRepository _repo = new AuthenticationRepository(userManager))
+            {
+                Contracts.IUser user = await _repo.FindUser(context.UserName, context.Password);
+
+                if (user == null)
+                {
+                    context.SetError("invalid_grant", "The user name or password is incorrect.");
+                    return;
+                }
+            }
+
+            var identity = new ClaimsIdentity(context.Options.AuthenticationType);
+            identity.AddClaim(new Claim("sub", context.UserName));
+            identity.AddClaim(new Claim("role", "user"));
+
+            context.Validated(identity);
+
+        }
+    }
+    /*
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
+        public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+        {
+            context.Validated();
+        }
+
+        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+        {
+
+            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+            var userManager = context.OwinContext.GetUserManager<Business.User.UserManager>();
+
+            using (AuthenticationRepository _repo = new AuthenticationRepository(userManager))
+            {
+                Contracts.IUser user = await _repo.FindUser(context.UserName, context.Password);
+
+                if (user == null)
+                {
+                    context.SetError("invalid_grant", "The user name or password is incorrect.");
+                    return;
+                }
+            }
+
+            var identity = new ClaimsIdentity(context.Options.AuthenticationType);
+            identity.AddClaim(new Claim("sub", context.UserName));
+            identity.AddClaim(new Claim("role", "user"));
+
+            context.Validated(identity);
+
+        }
+
+
+        public override Task TokenEndpoint(OAuthTokenEndpointContext context)
+        {
+            foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
+            {
+                context.AdditionalResponseParameters.Add(property.Key, property.Value);
+            }
+
+            return Task.FromResult<object>(null);
+        }
+
         private readonly string _publicClientId;
 
         public ApplicationOAuthProvider(string publicClientId)
@@ -51,15 +126,6 @@ namespace CL.Services.Web.Providers
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
         }
 
-        public override Task TokenEndpoint(OAuthTokenEndpointContext context)
-        {
-            foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
-            {
-                context.AdditionalResponseParameters.Add(property.Key, property.Value);
-            }
-
-            return Task.FromResult<object>(null);
-        }
 
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
@@ -94,6 +160,7 @@ namespace CL.Services.Web.Providers
                 { "userName", userName }
             };
             return new AuthenticationProperties(data);
-        }
+        } 
     }
+    */
 }

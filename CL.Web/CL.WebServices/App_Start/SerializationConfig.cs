@@ -9,7 +9,7 @@ namespace CL.Services.Web
         public static void Register(HttpConfiguration config)
         {
             var settings = new JsonSerializerSettings();
-            settings.ContractResolver = new LowercaseContractResolver();
+            settings.ContractResolver = new LowercaseContractResolver(); //CamelCasePropertyNamesContractResolver
             config.Formatters.JsonFormatter.SerializerSettings = settings;
         }
     }
