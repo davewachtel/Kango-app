@@ -16,5 +16,7 @@ namespace CL.Services.Contracts
         string Email { get; set; }
 
         bool EmailConfirmed { get; set; }
+
+        IList<IRole> Roles { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace CL.Services.Data.Repository
         }
     }
 
-    class CLUserStore : IUserStore<Contracts.User>, IUserPasswordStore<Contracts.User>, IUserSecurityStampStore<Contracts.User>, IUserEmailStore<Contracts.User>
+    class CLUserStore : IUserStore<Contracts.User>, IUserPasswordStore<Contracts.User>, IUserSecurityStampStore<Contracts.User>, IUserEmailStore<Contracts.User>, IUserRoleStore<Contracts.User>
     {
         readonly CLIdentityDBContext context;
         readonly UserStore<IdentityUser> userStore;
@@ -158,6 +158,37 @@ namespace CL.Services.Data.Repository
             return task;
         }
 
+
+        public Task AddToRoleAsync(Contracts.User user, string roleName)
+        {
+            var identityUser = ToIdentityUser(user);
+            var task = userStore.AddToRoleAsync(identityUser, roleName);
+            SetApplicationUser(user, identityUser);
+            return task;
+        }
+
+        public Task<IList<string>> GetRolesAsync(Contracts.User user)
+        {
+            var identityUser = ToIdentityUser(user);
+            var task = userStore.GetRolesAsync(identityUser);
+            return task;
+        }
+
+        public Task<bool> IsInRoleAsync(Contracts.User user, string roleName)
+        {
+            var identityUser = ToIdentityUser(user);
+            var task = userStore.IsInRoleAsync(identityUser, roleName);
+            return task;
+        }
+
+        public Task RemoveFromRoleAsync(Contracts.User user, string roleName)
+        {
+            var identityUser = ToIdentityUser(user);
+            var task = userStore.AddToRoleAsync(identityUser, roleName);
+            SetApplicationUser(user, identityUser);
+            return task;
+        }
+
         private Contracts.User ToUser(IdentityUser identity)
         {
             if (identity == null)
@@ -179,6 +210,7 @@ namespace CL.Services.Data.Repository
                 user.SecurityStamp = identityUser.SecurityStamp;
                 user.Email = identityUser.Email;
                 user.EmailConfirmed = identityUser.EmailConfirmed;
+
             }
             else
                 user = null;
@@ -201,5 +233,6 @@ namespace CL.Services.Data.Repository
         {
             this.userStore.Dispose();
         }
+
     }
 }

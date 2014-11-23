@@ -53,6 +53,7 @@
     <Compile Include="Interfaces\Response\IPostResponse.cs" />
     <Compile Include="Interfaces\Response\IPutResponse.cs" />
     <Compile Include="Interfaces\Response\IGetPagedResponse.cs" />
+    <Compile Include="Interfaces\Users\IRole.cs" />
     <Compile Include="Models\Assets\AssetType.cs" />
     <Compile Include="Interfaces\Tags\ITag.cs" />
     <Compile Include="Enum.cs" />

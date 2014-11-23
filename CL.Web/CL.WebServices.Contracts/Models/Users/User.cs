@@ -16,12 +16,15 @@ namespace CL.Services.Contracts
             : this()
         {
             this.UserName = userName;
+            this.Roles = new List<IRole>();
         }
 
-        public virtual string Id { get; set; }
+        public virtual String Id { get; set; }
         public virtual string PasswordHash { get; set; }
         public virtual string SecurityStamp { get; set; }
         public virtual string UserName { get; set; }
+
+        public virtual IList<IRole> Roles { get; set; }
 
         public virtual string Email { get; set; }
 
@@ -29,7 +32,7 @@ namespace CL.Services.Contracts
 
         public static User ToUser(Contracts.IUser user)
         {
-            return new User()
+            var newUser =  new User()
             {
                 Id = user.Id,
                 PasswordHash = user.PasswordHash,
@@ -38,6 +41,16 @@ namespace CL.Services.Contracts
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed
             };
+
+            if(user.Roles != null)
+            {
+                foreach(IRole role in user.Roles)
+                {
+                    newUser.Roles.Add(role);
+                }
+            }
+
+            return newUser;
         }
     }
 }

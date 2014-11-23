@@ -13,72 +13,8 @@ using CL.Services.Web.Repository;
 
 namespace CL.Services.Web.Providers
 {
-    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
-    {
-        public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
-        {
-            context.Validated();
-        }
-
-        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
-        {
-
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
-            var userManager = context.OwinContext.GetUserManager<Business.User.UserManager>();
-
-            using (AuthenticationRepository _repo = new AuthenticationRepository(userManager))
-            {
-                Contracts.IUser user = await _repo.FindUser(context.UserName, context.Password);
-
-                if (user == null)
-                {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
-                    return;
-                }
-            }
-
-            var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim("sub", context.UserName));
-            identity.AddClaim(new Claim("role", "user"));
-
-            context.Validated(identity);
-
-        }
-    }
-    /*
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
-        public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
-        {
-            context.Validated();
-        }
-
-        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
-        {
-
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
-            var userManager = context.OwinContext.GetUserManager<Business.User.UserManager>();
-
-            using (AuthenticationRepository _repo = new AuthenticationRepository(userManager))
-            {
-                Contracts.IUser user = await _repo.FindUser(context.UserName, context.Password);
-
-                if (user == null)
-                {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
-                    return;
-                }
-            }
-
-            var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim("sub", context.UserName));
-            identity.AddClaim(new Claim("role", "user"));
-
-            context.Validated(identity);
-
-        }
-
-
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
         {
             foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
@@ -94,10 +30,8 @@ namespace CL.Services.Web.Providers
         public ApplicationOAuthProvider(string publicClientId)
         {
             if (publicClientId == null)
-            {
                 throw new ArgumentNullException("publicClientId");
-            }
-
+            
             _publicClientId = publicClientId;
         }
 
@@ -106,7 +40,6 @@ namespace CL.Services.Web.Providers
             var userManager = context.OwinContext.GetUserManager<Business.User.UserManager>();
 
             Contracts.IUser foundUser = await userManager.FindAsync(context.UserName, context.Password);
-
             if (foundUser == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
@@ -115,15 +48,13 @@ namespace CL.Services.Web.Providers
 
             Business.User.User user = new Business.User.User(foundUser);
 
-            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
-               OAuthDefaults.AuthenticationType);
-            ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
-                CookieAuthenticationDefaults.AuthenticationType);
+            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager, OAuthDefaults.AuthenticationType);
+            //ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager, CookieAuthenticationDefaults.AuthenticationType);
 
             AuthenticationProperties properties = CreateProperties(user.UserName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
-            context.Request.Context.Authentication.SignIn(cookiesIdentity);
+            //context.Request.Context.Authentication.SignIn(cookiesIdentity);
         }
 
 
@@ -131,9 +62,8 @@ namespace CL.Services.Web.Providers
         {
             // Resource owner password credentials does not provide a client ID.
             if (context.ClientId == null)
-            {
                 context.Validated();
-            }
+            
 
             return Task.FromResult<object>(null);
         }
@@ -162,5 +92,4 @@ namespace CL.Services.Web.Providers
             return new AuthenticationProperties(data);
         } 
     }
-    */
 }

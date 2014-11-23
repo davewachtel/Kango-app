@@ -12,8 +12,8 @@ using System.Web.Http;
 
 namespace CL.Services.Web.Controllers
 {
-    [RoutePrefix("Login")]
     [AllowAnonymous]
+    [RoutePrefix("api/Login")]
     public class LoginController : ApiController
     {
         private AuthenticationRepository _repo = null;

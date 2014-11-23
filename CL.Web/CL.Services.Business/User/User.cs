@@ -69,6 +69,12 @@ namespace CL.Services.Business.User
             set { this._User.EmailConfirmed = value; }
         }
 
+        public IList<Contracts.IRole> Roles
+        {
+            get { return this._User.Roles; }
+            set { this._User.Roles = value; }
+        }
+
         public string Id
         {
             get { return this._User.Id; }

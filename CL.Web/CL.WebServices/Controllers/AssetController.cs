@@ -10,8 +10,7 @@ using System.Web.Http.Cors;
 
 namespace CL.Services.Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    [RoutePrefix("Asset")]
+    [RoutePrefix("api/Asset")]
     public class AssetController : ApiController
     {
         //GET api/asset/1

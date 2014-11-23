@@ -19,37 +19,11 @@ namespace CL.Services.Web
         public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
 
         public static string PublicClientId { get; private set; }
-
-        public void ConfigureOAuth(IAppBuilder app)
-        {
-            app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
-            {
-                TokenEndpointPath = new PathString("/oauth/token"),
-                Provider = new SimpleAuthorizationServerProvider(),
-                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
-                #if DEBUG
-                AllowInsecureHttp = true,
-                #endif
-            });
-
-            // Token Generation
-            //app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-
-        }
-
+        
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-            HttpConfiguration config = new HttpConfiguration();
-
-            WebApiConfig.Register(config);
-            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
-            app.UseWebApi(config);
-
-            ConfigureOAuth(app);
-
-            /*
-            PublicClientId = "self";
+           PublicClientId = "self";
 
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext<UserManager>(UserManager.Create);
@@ -64,7 +38,7 @@ namespace CL.Services.Web
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
                 AllowInsecureHttp = true,
-                TokenEndpointPath = new PathString("/token"),
+                TokenEndpointPath = new PathString("/oauth/token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(14)
             };
@@ -93,7 +67,7 @@ namespace CL.Services.Web
             //    ClientId = "",
             //    ClientSecret = ""
             //});
-             */ 
+             
         }
     }
 

@@ -6,8 +6,7 @@ using System.Web.Http;
 
 namespace CL.Services.Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    [RoutePrefix("AssetType")]
+    [RoutePrefix("api/Asset/Type")]
     public class AssetTypeController : ApiController
     {
         //

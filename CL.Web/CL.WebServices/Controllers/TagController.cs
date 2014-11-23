@@ -12,8 +12,7 @@ using System.Web.Http;
 
 namespace CL.Services.Web.Controllers
 {
-    [Authorize(Roles="Admin")]
-    [RoutePrefix("Tag")]
+    [RoutePrefix("api/Tag")]
     public class TagController : ApiController
     {
         //GET api/tag/1
