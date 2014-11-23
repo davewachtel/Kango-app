@@ -12,6 +12,7 @@ using System.Web.Http;
 
 namespace CL.Services.Web.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/Tag")]
     public class TagController : ApiController
     {

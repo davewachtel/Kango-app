@@ -12,6 +12,7 @@ using System.Web.Http.Cors;
 
 namespace CL.Services.Web.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/Media")]
     public class MediaController : ApiController
     {

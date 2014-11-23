@@ -74,4 +74,7 @@
     <Build Include="dbo\Tables\Share.sql" />
     <Build Include="dbo\Tables\Views.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CL.Database.publish.xml" />
+  </ItemGroup>
 </Project>

@@ -15,9 +15,9 @@ namespace CL.Services.Web
     {
         public void Configuration(IAppBuilder app)
         {
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             GlobalConfiguration.Configure(WebApiConfig.Register);
             GlobalConfiguration.Configure(SerializationConfig.Register);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 
             ConfigureAuth(app);
         }

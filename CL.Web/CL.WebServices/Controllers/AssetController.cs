@@ -10,6 +10,7 @@ using System.Web.Http.Cors;
 
 namespace CL.Services.Web.Controllers
 {
+    [AllowAnonymous]  //Temporary until Login page is built.
     [RoutePrefix("api/Asset")]
     public class AssetController : ApiController
     {

@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace CL.Services.Web.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
