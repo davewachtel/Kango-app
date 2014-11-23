@@ -14,14 +14,18 @@ namespace CL.Services.Web.Controllers
     public class UserController : ApiController
     {
 
-        [Route("history")]
+        [Route("History")]
         [HttpDelete]
-        public HttpResponseMessage History_Delete([FromUri] int userId)
+        public HttpResponseMessage History_Delete()
         {
-            var userManager = UserManager.Create();
-            using(var _repo = new AuthenticationRepository(userManager))
+            if (User.Identity != null)
             {
+                var userManager = UserManager.Create();
+                using (var _repo = new AuthenticationRepository(userManager))
+                {
+                    //Business.User.User user = new User();
 
+                }
             }
 
             return new HttpResponseMessage(HttpStatusCode.NoContent); //204

@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CLUserStore.cs" />
     <Compile Include="Context\Asset.cs">
       <DependentUpon>CLContext.tt</DependentUpon>
     </Compile>
