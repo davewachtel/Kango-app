@@ -15,11 +15,16 @@ namespace CL.Services.Web
     {
         public void Configuration(IAppBuilder app)
         {
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            GlobalConfiguration.Configure(SerializationConfig.Register);
+            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
 
             ConfigureAuth(app);
+
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+
+            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);   
+            GlobalConfiguration.Configure(SerializationConfig.Register);
+            
+
         }
     }
 }
