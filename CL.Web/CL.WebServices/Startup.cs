@@ -21,7 +21,7 @@ namespace CL.Services.Web
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
-            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);   
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);   
             GlobalConfiguration.Configure(SerializationConfig.Register);
             
 

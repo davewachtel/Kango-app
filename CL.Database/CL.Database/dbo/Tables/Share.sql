@@ -1,11 +1,13 @@
 ﻿CREATE TABLE [dbo].[Share]
 (
 	[Id] INT IDENTITY NOT NULL,
-	[ViewId] INT NOT NULL,
-	[RecipientId] NVARCHAR(128) NOT NULL,
+    [AssetId] INT NOT NULL, 
+	[ToUserId] NVARCHAR(128) NOT NULL,
+	[FromUserId] NVARCHAR(128) NOT NULL,
 	[CreateDt] SMALLDATETIME NOT NULL,
-	
+    [ReadDt] SMALLDATETIME NULL, 
     CONSTRAINT [PK_Share] PRIMARY KEY CLUSTERED ([Id] ASC), 
-    CONSTRAINT [FK_Share_View_Id] FOREIGN KEY (ViewId) REFERENCES Views(Id),
-    CONSTRAINT [FK_Share_User_Id] FOREIGN KEY (RecipientId) REFERENCES AspNetUsers(Id)
+    CONSTRAINT [FK_Share_Asset_Id] FOREIGN KEY (AssetId) REFERENCES Asset(Id),
+    CONSTRAINT [FK_Share_ToUserId_Id] FOREIGN KEY (ToUserId) REFERENCES AspNetUsers(Id),
+    CONSTRAINT [FK_Share_FromUserId_Id] FOREIGN KEY (FromUserId) REFERENCES AspNetUsers(Id)
 )

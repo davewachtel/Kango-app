@@ -35,6 +35,7 @@ namespace CL.Services.Web.Providers
             _publicClientId = publicClientId;
         }
 
+
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             var userManager = context.OwinContext.GetUserManager<Business.User.UserManager>();
@@ -43,15 +44,17 @@ namespace CL.Services.Web.Providers
             if (foundUser == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
+                context.Rejected();
                 return;
             }
 
             Business.User.User user = new Business.User.User(foundUser);
 
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager, OAuthDefaults.AuthenticationType);
-            //ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager, CookieAuthenticationDefaults.AuthenticationType);
-
-            AuthenticationProperties properties = CreateProperties(user.UserName);
+            oAuthIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            oAuthIdentity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+            
+            AuthenticationProperties properties = CreateProperties(user);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             //context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -83,11 +86,12 @@ namespace CL.Services.Web.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName)
+        public static AuthenticationProperties CreateProperties(Business.User.User user)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
-                { "userName", userName }
+                { "userName", user.UserName },
+                //{ "userId", user.Id}
             };
             return new AuthenticationProperties(data);
         } 

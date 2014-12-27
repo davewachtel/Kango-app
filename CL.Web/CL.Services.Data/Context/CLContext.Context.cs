@@ -29,5 +29,8 @@ namespace CL.Services.Data.Context
         public DbSet<Asset> Assets { get; set; }
         public DbSet<AssetTag> AssetTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<View> Views { get; set; }
+        public DbSet<Share> Shares { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

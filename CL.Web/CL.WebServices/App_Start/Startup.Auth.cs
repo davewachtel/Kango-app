@@ -39,15 +39,14 @@ namespace CL.Services.Web
             {
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/oauth/token"),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(365),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14)
             };
 
             // Enable the application to use bearer tokens to authenticate users
             // Token Generation
             app.UseOAuthAuthorizationServer(OAuthOptions);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(

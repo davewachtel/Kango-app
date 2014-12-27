@@ -12,11 +12,11 @@ namespace CL.Services.Web.Controllers
 {
     [AllowAnonymous]  //Temporary until Login page is built.
     [RoutePrefix("api/Asset")]
-    public class AssetController : ApiController
+    public class AssetController : CLApiController
     {
         //GET api/asset/1
         [HttpGet]
-public AssetModel GetAssetById(int id)
+        public AssetModel GetAssetById(int id)
         {
             IAsset result = Asset.GetAssetById(id);
             var asset = AssetModel.Load(result);

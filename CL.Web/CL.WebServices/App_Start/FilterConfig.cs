@@ -13,7 +13,6 @@ namespace CL.Services.Web
             filters.Add(new RequireHttpsAttribute());
 #endif 
   */          
-            filters.Add(new AuthorizeAttribute());
         }
     }
 }

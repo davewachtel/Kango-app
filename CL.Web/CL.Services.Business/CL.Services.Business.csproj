@@ -51,6 +51,7 @@
     <Compile Include="Tag.cs" />
     <Compile Include="User\User.cs" />
     <Compile Include="User\UserManager.cs" />
+    <Compile Include="View\View.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CL.Services.Data\CL.Services.Data.csproj">
@@ -63,6 +64,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Share\" />
     <Folder Include="UserAsset\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

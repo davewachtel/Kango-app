@@ -14,6 +14,7 @@ namespace CL.Services.Data.Repository
 
         public CLRepository()
         {
+            this.Context.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         internal CLEntities Context { get { return context; } }

@@ -13,7 +13,16 @@ namespace CL.Services.Data.Repository
     {
         public MediaRepository() { }
 
-        public IPagedResponse<IMedia> GetAll(int pageNumber, int pageSize)
+        public IMedia GetMediaByAssetId(int assetId)
+        {
+            var query = this.Context.Assets
+                                .Where(a => a.Id == assetId && a.IsActive);
+
+            var asset = query.FirstOrDefault();
+            return Mappers.CLMapper.MapMedia(asset);
+        }
+
+        public IPagedResponse<IMedia> GetAll(String userId, int pageNumber, int pageSize)
         {
             if (pageNumber <= 0)
                 throw new ArgumentException("Page number must exceed 0.", "pageNumber");
@@ -23,9 +32,22 @@ namespace CL.Services.Data.Repository
 
             int totalCount = 0;
 
+            var myViews = this.Context.Views.Where(v => v.UserId == userId);
+            var query = from asset in this.Context.Assets
+                        join views in myViews on asset.Id equals views.AssetId into av
+                        from subAssets in av.DefaultIfEmpty()
+                        where asset.IsActive 
+                                && asset.AssetTypeId != (int)CL.Services.Contracts.AssetTypeEnum.YouTube
+                                && subAssets.Id == null
+                        select asset;
+                        
+            /*
             var query = this.Context.Assets
                             .Where(a => a.IsActive)
                             .Where(a => a.AssetTypeId != (int)CL.Services.Contracts.AssetTypeEnum.YouTube);
+            */
+
+
 
             var pageQuery = this.PagedResult(query, pageNumber, pageSize, a => Guid.NewGuid(), true, out totalCount);
 

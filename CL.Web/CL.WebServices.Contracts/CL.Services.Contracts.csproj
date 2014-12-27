@@ -53,7 +53,10 @@
     <Compile Include="Interfaces\Response\IPostResponse.cs" />
     <Compile Include="Interfaces\Response\IPutResponse.cs" />
     <Compile Include="Interfaces\Response\IGetPagedResponse.cs" />
+    <Compile Include="Interfaces\Share\IInboxMessage.cs" />
+    <Compile Include="Interfaces\Share\IShare.cs" />
     <Compile Include="Interfaces\Users\IRole.cs" />
+    <Compile Include="Interfaces\View\IView.cs" />
     <Compile Include="Models\Assets\AssetType.cs" />
     <Compile Include="Interfaces\Tags\ITag.cs" />
     <Compile Include="Enum.cs" />
@@ -65,6 +68,8 @@
     <Compile Include="Models\Responses\GetPagedResponse.cs" />
     <Compile Include="Models\Responses\PostResponse.cs" />
     <Compile Include="Models\Responses\PutResponse.cs" />
+    <Compile Include="Models\Share\InboxMessage.cs" />
+    <Compile Include="Models\Share\Share.cs" />
     <Compile Include="Models\Tags\Tag.cs" />
     <Compile Include="Interfaces\Users\IUser.cs" />
     <Compile Include="Models\Users\User.cs" />

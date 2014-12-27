@@ -12,24 +12,23 @@ namespace CL.Services.Data.Context
     using System;
     using System.Collections.Generic;
     
-    public partial class Asset
+    public partial class Share
     {
-        public Asset()
+        public Share()
         {
-            this.AssetTags = new HashSet<AssetTag>();
             this.Views = new HashSet<View>();
-            this.Shares = new HashSet<Share>();
         }
     
         public int Id { get; set; }
-        public int AssetTypeId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Url { get; set; }
-        public bool IsActive { get; set; }
+        public int AssetId { get; set; }
+        public string ToUserId { get; set; }
+        public string FromUserId { get; set; }
+        public System.DateTime CreateDt { get; set; }
+        public Nullable<System.DateTime> ReadDt { get; set; }
     
-        public virtual ICollection<AssetTag> AssetTags { get; set; }
+        public virtual Asset Asset { get; set; }
         public virtual ICollection<View> Views { get; set; }
-        public virtual ICollection<Share> Shares { get; set; }
+        public virtual User FromUser { get; set; }
+        public virtual User ToUser { get; set; }
     }
 }

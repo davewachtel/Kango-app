@@ -13,18 +13,18 @@ using System.Web.Http;
 namespace CL.Services.Web.Controllers
 {
     [AllowAnonymous]
-    [RoutePrefix("api/Login")]
-    public class LoginController : ApiController
+    [RoutePrefix("api/Account")]
+    public class AccountController : CLApiController
     {
         private AuthenticationRepository _repo = null;
-        public LoginController()
+        public AccountController()
         {
             var userManager = UserManager.Create();
             _repo = new AuthenticationRepository(userManager);
         }
 
-        // POST api/Login/Register
-        [Route("Register")]
+        // POST api/Account
+        [HttpPost]
         public async Task<IHttpActionResult> Register([FromBody] UserModel userModel)
         {
             if (!ModelState.IsValid)

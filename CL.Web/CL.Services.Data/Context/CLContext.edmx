@@ -4,41 +4,212 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CLModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityContainer Name="CLModelStoreContainer">
-          <EntitySet Name="Asset" EntityType="CLModel.Store.Asset" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="AssetTag" EntityType="CLModel.Store.AssetTag" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Tag" EntityType="CLModel.Store.Tag" store:Type="Tables" Schema="dbo" />
-        </EntityContainer>
+    <Schema Namespace="CLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Hometown" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
         <EntityType Name="Asset">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AssetTypeId" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
-          <Property Name="Url" Type="nvarchar" Nullable="false" MaxLength="2083" />
+          <Property Name="Url" Type="nvarchar" MaxLength="2083" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="AssetTag">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AssetId" Type="int" Nullable="false" />
           <Property Name="TagId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Share">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AssetId" Type="int" Nullable="false" />
+          <Property Name="ToUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="FromUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="CreateDt" Type="smalldatetime" Nullable="false" />
+          <Property Name="ReadDt" Type="smalldatetime" />
         </EntityType>
         <EntityType Name="Tag">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
-      </Schema>
-    </edmx:StorageModels>
+        <EntityType Name="Views">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="AssetId" Type="int" Nullable="false" />
+          <Property Name="ShareId" Type="int" />
+          <Property Name="Duration" Type="int" Nullable="false" />
+          <Property Name="CreateDt" Type="smalldatetime" Nullable="false" />
+          <Property Name="IsLiked" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AssetTags_Asset">
+          <End Role="Asset" Type="Self.Asset" Multiplicity="1" />
+          <End Role="AssetTag" Type="Self.AssetTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asset">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AssetTag">
+              <PropertyRef Name="AssetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AssetTags_AssetId_Tag_TagId">
+          <End Role="Tag" Type="Self.Tag" Multiplicity="1" />
+          <End Role="AssetTag" Type="Self.AssetTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AssetTag">
+              <PropertyRef Name="TagId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Share_Asset_Id">
+          <End Role="Asset" Type="Self.Asset" Multiplicity="1" />
+          <End Role="Share" Type="Self.Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asset">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="AssetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Share_FromUserId_Id">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Share" Type="Self.Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="FromUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Share_ToUserId_Id">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Share" Type="Self.Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="ToUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Views_AssetId_Asset_Id">
+          <End Role="Asset" Type="Self.Asset" Multiplicity="1" />
+          <End Role="Views" Type="Self.Views" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asset">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Views">
+              <PropertyRef Name="AssetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Views_ShareId_Share_Id">
+          <End Role="Share" Type="Self.Share" Multiplicity="0..1" />
+          <End Role="Views" Type="Self.Views" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Share">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Views">
+              <PropertyRef Name="ShareId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Views_UserId_AspNetUsers_Id">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="Views" Type="Self.Views" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Views">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CLModelStoreContainer">
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Asset" EntityType="Self.Asset" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AssetTag" EntityType="Self.AssetTag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Share" EntityType="Self.Share" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tag" EntityType="Self.Tag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Views" EntityType="Self.Views" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AssetTags_Asset" Association="Self.FK_AssetTags_Asset">
+            <End Role="Asset" EntitySet="Asset" />
+            <End Role="AssetTag" EntitySet="AssetTag" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AssetTags_AssetId_Tag_TagId" Association="Self.FK_AssetTags_AssetId_Tag_TagId">
+            <End Role="Tag" EntitySet="Tag" />
+            <End Role="AssetTag" EntitySet="AssetTag" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Share_Asset_Id" Association="Self.FK_Share_Asset_Id">
+            <End Role="Asset" EntitySet="Asset" />
+            <End Role="Share" EntitySet="Share" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Share_FromUserId_Id" Association="Self.FK_Share_FromUserId_Id">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Share" EntitySet="Share" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Share_ToUserId_Id" Association="Self.FK_Share_ToUserId_Id">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Share" EntitySet="Share" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Views_AssetId_Asset_Id" Association="Self.FK_Views_AssetId_Asset_Id">
+            <End Role="Asset" EntitySet="Asset" />
+            <End Role="Views" EntitySet="Views" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Views_ShareId_Share_Id" Association="Self.FK_Views_ShareId_Share_Id">
+            <End Role="Share" EntitySet="Share" />
+            <End Role="Views" EntitySet="Views" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Views_UserId_AspNetUsers_Id" Association="Self.FK_Views_UserId_AspNetUsers_Id">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Views" EntitySet="Views" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CLModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -54,7 +225,34 @@
             <End Role="AssetTag" EntitySet="AssetTags" />
             <End Role="Tag" EntitySet="Tags" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="Views" EntityType="CLModel.View" />
+          <AssociationSet Name="FK_Views_AssetId_Asset_Id" Association="CLModel.FK_Views_AssetId_Asset_Id">
+            <End Role="Asset" EntitySet="Assets" />
+            <End Role="View" EntitySet="Views" />
+          </AssociationSet>
+          <EntitySet Name="Shares" EntityType="CLModel.Share" />
+          <AssociationSet Name="FK_Share_Asset_Id" Association="CLModel.FK_Share_Asset_Id">
+            <End Role="Asset" EntitySet="Assets" />
+            <End Role="Share" EntitySet="Shares" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Views_ShareId_Share_Id" Association="CLModel.FK_Views_ShareId_Share_Id">
+            <End Role="Share" EntitySet="Shares" />
+            <End Role="View" EntitySet="Views" />
+          </AssociationSet>
+          <EntitySet Name="Users" EntityType="CLModel.User" />
+          <AssociationSet Name="FK_Share_FromUserId_Id" Association="CLModel.FK_Share_FromUserId_Id">
+            <End Role="AspNetUser" EntitySet="Users" />
+            <End Role="Share" EntitySet="Shares" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Share_ToUserId_Id" Association="CLModel.FK_Share_ToUserId_Id">
+            <End Role="AspNetUser" EntitySet="Users" />
+            <End Role="Share" EntitySet="Shares" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Views_UserId_AspNetUsers_Id" Association="CLModel.FK_Views_UserId_AspNetUsers_Id">
+            <End Role="AspNetUser" EntitySet="Users" />
+            <End Role="View" EntitySet="Views" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Asset">
           <Key>
             <PropertyRef Name="Id" />
@@ -66,6 +264,8 @@
           <Property Name="Url" Type="String" Nullable="false" MaxLength="2083" Unicode="true" FixedLength="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="AssetTags" Relationship="CLModel.AssetAssetTag" FromRole="Asset" ToRole="AssetTag" />
+          <NavigationProperty Name="Views" Relationship="CLModel.FK_Views_AssetId_Asset_Id" FromRole="Asset" ToRole="View" />
+          <NavigationProperty Name="Shares" Relationship="CLModel.FK_Share_Asset_Id" FromRole="Asset" ToRole="Share" />
         </EntityType>
         <EntityType Name="AssetTag">
           <Key>
@@ -110,7 +310,127 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="View">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="AssetId" Type="Int32" Nullable="false" />
+          <Property Name="ShareId" Type="Int32" />
+          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="CreateDt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="IsLiked" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Asset" Relationship="CLModel.FK_Views_AssetId_Asset_Id" FromRole="View" ToRole="Asset" />
+          <NavigationProperty Name="Share" Relationship="CLModel.FK_Views_ShareId_Share_Id" FromRole="View" ToRole="Share" />
+          <NavigationProperty Name="User" Relationship="CLModel.FK_Views_UserId_AspNetUsers_Id" FromRole="View" ToRole="AspNetUser" />
+        </EntityType>
+        <Association Name="FK_Views_AssetId_Asset_Id">
+          <End Type="CLModel.Asset" Role="Asset" Multiplicity="1" />
+          <End Type="CLModel.View" Role="View" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asset">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="View">
+              <PropertyRef Name="AssetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Share">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AssetId" Type="Int32" Nullable="false" />
+          <Property Name="ToUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="FromUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ReadDt" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Asset" Relationship="CLModel.FK_Share_Asset_Id" FromRole="Share" ToRole="Asset" />
+          <NavigationProperty Name="Views" Relationship="CLModel.FK_Views_ShareId_Share_Id" FromRole="Share" ToRole="View" />
+          <NavigationProperty Name="FromUser" Relationship="CLModel.FK_Share_FromUserId_Id" FromRole="Share" ToRole="AspNetUser" />
+          <NavigationProperty Name="ToUser" Relationship="CLModel.FK_Share_ToUserId_Id" FromRole="Share" ToRole="AspNetUser" />
+        </EntityType>
+        <Association Name="FK_Share_Asset_Id">
+          <End Type="CLModel.Asset" Role="Asset" Multiplicity="1" />
+          <End Type="CLModel.Share" Role="Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asset">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="AssetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Views_ShareId_Share_Id">
+          <End Type="CLModel.Share" Role="Share" Multiplicity="0..1" />
+          <End Type="CLModel.View" Role="View" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Share">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="View">
+              <PropertyRef Name="ShareId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Hometown" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Share_FromUserId_Id">
+          <End Type="CLModel.User" Role="AspNetUser" Multiplicity="1" />
+          <End Type="CLModel.Share" Role="Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="FromUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Share_ToUserId_Id">
+          <End Type="CLModel.User" Role="AspNetUser" Multiplicity="1" />
+          <End Type="CLModel.Share" Role="Share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Share">
+              <PropertyRef Name="ToUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Views_UserId_AspNetUsers_Id">
+          <End Type="CLModel.User" Role="AspNetUser" Multiplicity="1" />
+          <End Type="CLModel.View" Role="View" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="View">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -146,6 +466,50 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Views">
+            <EntityTypeMapping TypeName="CLModel.View">
+              <MappingFragment StoreEntitySet="Views">
+                <ScalarProperty Name="IsLiked" ColumnName="IsLiked" />
+                <ScalarProperty Name="CreateDt" ColumnName="CreateDt" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="ShareId" ColumnName="ShareId" />
+                <ScalarProperty Name="AssetId" ColumnName="AssetId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shares">
+            <EntityTypeMapping TypeName="CLModel.Share">
+              <MappingFragment StoreEntitySet="Share">
+                <ScalarProperty Name="ReadDt" ColumnName="ReadDt" />
+                <ScalarProperty Name="CreateDt" ColumnName="CreateDt" />
+                <ScalarProperty Name="FromUserId" ColumnName="FromUserId" />
+                <ScalarProperty Name="ToUserId" ColumnName="ToUserId" />
+                <ScalarProperty Name="AssetId" ColumnName="AssetId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="CLModel.User">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Hometown" ColumnName="Hometown" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -163,6 +527,7 @@
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

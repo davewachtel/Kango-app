@@ -11,7 +11,15 @@ namespace CL.Services.Business.Media
 {
     public abstract class Media
     {
-        public static IPagedResponse<IMedia> GetMedia(int pageNumber, int pageSize)
+        public static IMedia GetMediaByAssetId(int assetId)
+        {
+            using(MediaRepository repo = new MediaRepository())
+            {
+                return repo.GetMediaByAssetId(assetId);
+            }
+        }
+
+        public static IPagedResponse<IMedia> GetMedia(String userId, int pageNumber, int pageSize)
         {
             if (pageNumber <= 0)
                 throw new ArgumentException("Page number must exceed 0.");
@@ -21,7 +29,7 @@ namespace CL.Services.Business.Media
 
             using (MediaRepository repo = new MediaRepository())
             {
-                return repo.GetAll(pageNumber, pageSize);
+                return repo.GetAll(userId, pageNumber, pageSize);
             }
         }
     }

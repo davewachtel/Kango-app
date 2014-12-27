@@ -13,12 +13,12 @@ using System.Web.Http;
 namespace CL.Services.Web.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/Tag")]
-    public class TagController : ApiController
+    [RoutePrefix("api/Tags")]
+    public class TagController : CLApiController
     {
         //GET api/tag/1
         [HttpGet]
-        public TagModel GetAssetById(int id)
+        public TagModel GetTagById(int id)
         {
             ITag result = new Business.Tag().GetById(id);
             var asset = TagModel.Load(result);

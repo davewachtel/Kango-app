@@ -12,12 +12,21 @@ using System.Web.Http.Cors;
 
 namespace CL.Services.Web.Controllers
 {
-    //[Authorize]
-
-    [AllowAnonymous]
+    [Authorize]
     [RoutePrefix("api/Media")]
-    public class MediaController : ApiController
+    public class MediaController : CLApiController
     {
+        // GET api/media/{id}
+        [HttpGet]
+        public MediaModel GetMediaByAssetId(int assetId)
+        {
+            IMedia result = Business.Media.Media.GetMediaByAssetId(assetId);
+            MediaModel media = MediaModel.Load(result);
+
+            return media;
+        }
+
+
         // GET api/media
         [HttpGet]
         public IPagedResponse<MediaModel> Get([FromUri]PagingFilter filter)
@@ -25,7 +34,9 @@ namespace CL.Services.Web.Controllers
             if (filter == null)
                 filter = new PagingFilter(1, 25);
 
-            IPagedResponse<IMedia> results = Business.Media.Media.GetMedia(filter.Page, filter.Size);
+            var userId = this.getUserId();
+
+            IPagedResponse<IMedia> results = Business.Media.Media.GetMedia(userId, filter.Page, filter.Size);
 
             ICollection<MediaModel> models = new List<MediaModel>();
             if (results.Data != null)

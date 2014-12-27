@@ -4,13 +4,22 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5ad2a3c577d1451db69ff6332e34defd" Name="Diagram1">
-        <EntityTypeShape EntityType="CLModel.Asset" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CLModel.AssetTag" Width="1.5" PointX="3.5" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CLModel.Tag" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+      <Diagram DiagramId="5ad2a3c577d1451db69ff6332e34defd" Name="Diagram1" ZoomLevel="100">
+        <EntityTypeShape EntityType="CLModel.Asset" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CLModel.AssetTag" Width="1.5" PointX="6.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CLModel.Tag" Width="1.5" PointX="6.5" PointY="4.375" IsExpanded="true" />
         <AssociationConnector Association="CLModel.AssetAssetTag" />
         <AssociationConnector Association="CLModel.AssetTagTag" />
-      </Diagram>
+        <EntityTypeShape EntityType="CLModel.View" Width="1.5" PointX="2.625" PointY="0.75" />
+        <AssociationConnector Association="CLModel.FK_Views_AssetId_Asset_Id" />
+        <EntityTypeShape EntityType="CLModel.Share" Width="1.5" PointX="2.625" PointY="4.125" />
+        <AssociationConnector Association="CLModel.FK_Share_Asset_Id" />
+        <AssociationConnector Association="CLModel.FK_Views_ShareId_Share_Id" />
+        <EntityTypeShape EntityType="CLModel.User" Width="1.5" PointX="0.5" PointY="1.75" />
+        <AssociationConnector Association="CLModel.FK_Share_FromUserId_Id" />
+        <AssociationConnector Association="CLModel.FK_Share_ToUserId_Id" />
+        <AssociationConnector Association="CLModel.FK_Views_UserId_AspNetUsers_Id" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

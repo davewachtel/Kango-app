@@ -24,7 +24,6 @@ namespace CL.Services.Web.Models.User
         public string Id { get; set; }
 
         [Required]
-
         [DataType(DataType.EmailAddress)]
         [Display(Name = "User name")]
         public string UserName { get; set; }

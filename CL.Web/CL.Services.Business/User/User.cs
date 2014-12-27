@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CL.Services.Data.Repository;
 using System.Security.Claims;
+using CL.Services.Contracts.Responses;
+using CL.Services.Contracts;
 
 namespace CL.Services.Business.User
 {
@@ -22,6 +24,31 @@ namespace CL.Services.Business.User
         {
             LoginRepository repo = new LoginRepository();
             return repo.GetUserStore();
+        }
+
+        public static IPagedResponse<IInboxMessage> GetInboxByUserId(String userId, int page, int pageSize)
+        {
+            if (String.IsNullOrWhiteSpace(userId))
+                throw new ArgumentNullException("username");
+
+            UserRepository rep = new UserRepository();
+            return rep.GetInboxByUserId(userId, page, pageSize);
+        }
+
+        public static int SendInboxMessages(String fromUserId, IShare shareMessage)
+        {
+            UserRepository rep = new UserRepository();
+            return rep.SendInboxMessages(fromUserId, shareMessage);
+        }
+
+        public static void RemoveViewsByUserId(String userId)
+        {
+            if (String.IsNullOrWhiteSpace(userId))
+                throw new ArgumentNullException("userId");
+
+            UserRepository rep = new UserRepository();
+            rep.RemoveViewsByUserId(userId);
+
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager manager, string authenticationType)

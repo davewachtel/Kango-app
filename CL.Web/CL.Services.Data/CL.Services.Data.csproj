@@ -93,7 +93,16 @@
       <DependentUpon>CLContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Context\CLIdentityContext.cs" />
+    <Compile Include="Context\Share.cs">
+      <DependentUpon>CLContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\Tag.cs">
+      <DependentUpon>CLContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\User.cs">
+      <DependentUpon>CLContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\View.cs">
       <DependentUpon>CLContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Mappers\CLMapper.cs" />
@@ -104,6 +113,7 @@
     <Compile Include="Repository\LoginRepository.cs" />
     <Compile Include="Repository\MediaRepository.cs" />
     <Compile Include="Repository\TagRepository.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CL.WebServices.Contracts\CL.Services.Contracts.csproj">
