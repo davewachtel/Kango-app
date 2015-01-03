@@ -35,6 +35,15 @@ namespace CL.Services.Business.User
             return rep.GetInboxByUserId(userId, page, pageSize);
         }
 
+        public static IPutResponse MarkMessageAsReadOrUnRead(String userId, IInboxMessage message)
+        {
+            if (String.IsNullOrWhiteSpace(userId))
+                throw new ArgumentNullException("userId");
+
+            UserRepository rep = new UserRepository();
+            return rep.MarkMessageAsReadOrUnRead(userId, message.MessageId, message.IsRead);
+        }
+
         public static int SendInboxMessages(String fromUserId, IShare shareMessage)
         {
             UserRepository rep = new UserRepository();

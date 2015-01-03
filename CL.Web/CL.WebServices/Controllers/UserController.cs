@@ -1,5 +1,6 @@
 ﻿using CL.Services.Business.User;
 using CL.Services.Contracts.Responses;
+using CL.Services.Web.Models;
 using CL.Services.Web.Repository;
 using CL.Services.Web.TypeConverter;
 using System;
@@ -31,6 +32,14 @@ namespace CL.Services.Web.Controllers
             
 
             var response = Business.User.User.GetInboxByUserId(userId, filter.Page, filter.Size);
+            return response;
+        }
+
+        [Route("{userId}/Inbox")]
+        [HttpPut]
+        public IPutResponse MarkMessageAsReadOrUnRead([FromUri] String userId, [FromBody] InboxMessageModel message)
+        {
+            var response = Business.User.User.MarkMessageAsReadOrUnRead(userId, message);
             return response;
         }
 

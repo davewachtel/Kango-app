@@ -15,7 +15,9 @@ namespace CL.Services.Web.Controllers
     public class AssetController : CLApiController
     {
         //GET api/asset/1
+        
         [HttpGet]
+        [Route("{id}")]
         public AssetModel GetAssetById(int id)
         {
             IAsset result = Asset.GetAssetById(id);
@@ -26,6 +28,7 @@ namespace CL.Services.Web.Controllers
 
         //GET api/asset
         [HttpGet]
+        [Route("")]
         public IPagedResponse<AssetModel> GetAssets([FromUri]PagingFilter filter)
         {
             if (filter == null)

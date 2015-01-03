@@ -20,3 +20,5 @@ CL.Web/CL.Services.Web.Azure/bin/
 CL.Web/CL.Services.Web.Azure/rcf/Debug/
 CL.Web/packages/
 *.pubxml.user
+*.publish.xml
+*.pubxml

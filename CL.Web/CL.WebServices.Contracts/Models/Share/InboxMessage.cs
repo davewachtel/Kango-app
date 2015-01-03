@@ -8,6 +8,7 @@ namespace CL.Services.Contracts
 {
     public class InboxMessage : IInboxMessage
     {
+        public int MessageId { get; set; }
         public int AssetId { get; set; }
 
         public string FromUser { get; set; }

@@ -73,6 +73,7 @@ namespace CL.Services.Data.Mappers
                 return null;
 
             Contracts.InboxMessage result = new Contracts.InboxMessage();
+            result.MessageId = share.Id;
             result.AssetId = share.AssetId;
             result.FromUser = share.FromUser.UserName;
             //result.Message = share.Message;

@@ -91,7 +91,7 @@ namespace CL.Services.Web.Providers
             IDictionary<string, string> data = new Dictionary<string, string>
             {
                 { "userName", user.UserName },
-                //{ "userId", user.Id}
+                { "userId", user.Id}
             };
             return new AuthenticationProperties(data);
         } 

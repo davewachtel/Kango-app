@@ -16,12 +16,11 @@ namespace CL.Services.Data.Repository
         public void RemoveViewsByUserId(String userId)
         {
             //context.ExecuteStoreCommand("DELETE FROM Views WHERE UserId = {0}", customerId);
-            
+
             this.Context.Views.RemoveRange(this.Context.Views.Where(v => v.UserId == userId));
             this.Context.SaveChanges();
         }
 
-        
         public IPagedResponse<IInboxMessage> GetInboxByUserId(String userId, int pageNumber, int pageSize)
         {
             var query = this.Context.Shares
@@ -44,7 +43,38 @@ namespace CL.Services.Data.Repository
                 Data = lstResults
             };
         }
-        
+
+        public IPutResponse MarkMessageAsReadOrUnRead(String userId, int messageId, bool isRead)
+        {
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                throw new ArgumentNullException("userId");
+            }
+            if (messageId == 0)
+            {
+                throw new ArgumentNullException("assetId");
+            }
+
+            var message = this.Context.Shares
+                            .Where(s => s.Id == messageId)
+                            .Where(s => s.ToUserId == userId)
+                            .FirstOrDefault();
+
+            PutResponse response = new PutResponse();
+
+            if (message != null)
+            {
+                if (isRead)
+                    message.ReadDt = DateTime.UtcNow;
+                else
+                    message.ReadDt = null;
+
+                response.AffectedRecords = this.Context.SaveChanges();
+            }
+
+            return response;
+        }
+
         public int SendInboxMessages(String fromUserId, IShare shareMessage)
         {
             if (shareMessage.AssetId == 0)
@@ -53,14 +83,14 @@ namespace CL.Services.Data.Repository
             if (shareMessage.ToUserId == null || shareMessage.ToUserId.Length == 0)
                 throw new ArgumentNullException("ToUserId");
 
-            foreach(String userId in shareMessage.ToUserId)
+            foreach (String userId in shareMessage.ToUserId)
             {
                 var share = new Data.Context.Share()
                 {
-                   AssetId = shareMessage.AssetId,
-                   CreateDt = DateTime.UtcNow,
-                   FromUserId = fromUserId,
-                   ToUserId = userId
+                    AssetId = shareMessage.AssetId,
+                    CreateDt = DateTime.UtcNow,
+                    FromUserId = fromUserId,
+                    ToUserId = userId
                 };
 
                 this.Context.Shares.Add(share);

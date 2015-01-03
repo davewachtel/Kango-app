@@ -8,6 +8,8 @@ namespace CL.Services.Contracts
 {
     public interface IInboxMessage
     {
+        int MessageId { get; }
+
         int AssetId { get; }
 
         String FromUser { get; }

@@ -18,6 +18,7 @@ namespace CL.Services.Web.Controllers
     {
         // GET api/media/{id}
         [HttpGet]
+        [Route("{assetId}")]
         public MediaModel GetMediaByAssetId(int assetId)
         {
             IMedia result = Business.Media.Media.GetMediaByAssetId(assetId);
@@ -29,6 +30,7 @@ namespace CL.Services.Web.Controllers
 
         // GET api/media
         [HttpGet]
+        [Route("")]
         public IPagedResponse<MediaModel> Get([FromUri]PagingFilter filter)
         {
             if (filter == null)

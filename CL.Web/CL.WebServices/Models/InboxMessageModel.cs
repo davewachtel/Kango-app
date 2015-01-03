@@ -8,6 +8,8 @@ namespace CL.Services.Web.Models
 {
     public class InboxMessageModel : IInboxMessage
     {
+        public int MessageId { get; set; }
+
         public int AssetId { get; set; }
 
         public String FromUser { get; set; }
@@ -27,6 +29,7 @@ namespace CL.Services.Web.Models
         {
             InboxMessageModel model = new InboxMessageModel();
 
+            model.MessageId = msg.MessageId;
             model.AssetId = msg.AssetId;
             model.FromUser = msg.FromUser;
             model.Message = msg.Message;
@@ -40,6 +43,7 @@ namespace CL.Services.Web.Models
         {
             Contracts.InboxMessage msg = new Contracts.InboxMessage();
 
+            msg.MessageId = this.MessageId;
             msg.AssetId = this.AssetId;
             msg.FromUser = this.FromUser;
             msg.Message = this.Message;
