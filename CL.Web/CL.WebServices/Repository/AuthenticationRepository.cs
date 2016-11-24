@@ -17,9 +17,15 @@ namespace CL.Services.Web.Repository
             this.UserManager = manager;
         }
 
-        public async Task<IdentityResult> RegisterUser(Contracts.User userModel, String password)
+        public async Task<IdentityResult> RegisterUser(Contracts.User userModel, String password, String PhoneNumber)
         {
             var result = await this.UserManager.CreateAsync(userModel, password);
+
+            return result;
+        }
+        public async Task<IdentityResult> UpdatePhone(String id, String PhoneNumber)
+        {
+            var result = await this.UserManager.SetPhoneNumberAsync(id, PhoneNumber);
 
             return result;
         }

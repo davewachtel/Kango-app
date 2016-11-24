@@ -46,6 +46,7 @@
     <Compile Include="Assets\AssetType.cs" />
     <Compile Include="Assets\PhotoAsset.cs" />
     <Compile Include="Assets\VideoAsset.cs" />
+    <Compile Include="Friends.cs" />
     <Compile Include="Media\Media.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tag.cs" />
@@ -66,6 +67,9 @@
   <ItemGroup>
     <Folder Include="Share\" />
     <Folder Include="UserAsset\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

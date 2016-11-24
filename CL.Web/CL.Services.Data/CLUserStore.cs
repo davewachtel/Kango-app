@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Data.Entity;
+using CL.Services.Contracts;
 
 namespace CL.Services.Data
 {
-    internal class CLUserStore : IUserStore<Contracts.User>, IUserPasswordStore<Contracts.User>, IUserSecurityStampStore<Contracts.User>, IUserEmailStore<Contracts.User>, IUserRoleStore<Contracts.User>, IUserClaimStore<Contracts.User>
+    internal class CLUserStore : IUserStore<Contracts.User>, IUserPasswordStore<Contracts.User>, IUserSecurityStampStore<Contracts.User>, IUserEmailStore<Contracts.User>, IUserRoleStore<Contracts.User>, IUserClaimStore<Contracts.User>, IUserPhoneNumberStore<Contracts.User>
     {
         readonly CLIdentityDBContext context;
         readonly UserStore<IdentityUser> userStore;
@@ -54,8 +55,14 @@ namespace CL.Services.Data
         public Task UpdateAsync(Contracts.User user)
         {
             var identity = ToIdentityUser(user);
-            context.Users.Attach(identity);
-            context.Entry(user).State = EntityState.Modified;
+            var entry = context.Entry(identity);
+            bool isDetached = context.Entry(identity).State == EntityState.Detached;
+            if (isDetached)
+            {
+                context.Users.Attach(identity);
+                context.Entry(user).State = EntityState.Modified;
+            }
+            
             context.Configuration.ValidateOnSaveEnabled = false;
             return context.SaveChangesAsync();
         }
@@ -128,6 +135,15 @@ namespace CL.Services.Data
             SetApplicationUser(user, identityUser);
             return task;
         }
+   
+        public Task SetPhoneNumberAsync(Contracts.User user, string PhoneNumber)
+        {
+            var identityUser = ToIdentityUser(user);
+            var task = userStore.SetPhoneNumberAsync(identityUser, PhoneNumber);
+            SetApplicationUser(user, identityUser);
+            return task;
+        }
+
 
         public Task SetEmailConfirmedAsync(Contracts.User user, bool confirmed)
         {
@@ -211,6 +227,7 @@ namespace CL.Services.Data
                 user.SecurityStamp = identityUser.SecurityStamp;
                 user.Email = identityUser.Email;
                 user.EmailConfirmed = identityUser.EmailConfirmed;
+                user.PhoneNumber = identityUser.PhoneNumber;
 
             }
             else
@@ -226,13 +243,33 @@ namespace CL.Services.Data
                 PasswordHash = user.PasswordHash,
                 SecurityStamp = user.SecurityStamp,
                 Email = user.Email,
-                EmailConfirmed = user.EmailConfirmed
+                EmailConfirmed = user.EmailConfirmed,
+                PhoneNumber = user.PhoneNumber
             };
         }
 
         public void Dispose()
         {
             this.userStore.Dispose();
+        }
+
+        public Task<string> GetPhoneNumberAsync(Contracts.User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(Contracts.User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(Contracts.User user, bool confirmed)
+        {
+            //throw new NotImplementedException();
+            var identityUser = ToIdentityUser(user);
+            var task = userStore.SetPhoneNumberConfirmedAsync(identityUser, confirmed);
+            SetApplicationUser(user, identityUser);
+            return task;
         }
     }
 }

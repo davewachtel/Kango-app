@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="CL.Services.Web.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2014-06.2.4">
+  <Role name="CL.Services.Web">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=cornicelabsservices;AccountKey=oGIJ9rpsl459rzM0Xif+gFUbfAIMyQx1xYk+53wvtBcOPOlHPzyhboRnPGYkjCazP6OtO/Rg4RtEUXK4pA8jIA==" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>

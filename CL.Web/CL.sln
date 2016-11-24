@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CL.Services.Web", "CL.WebServices\CL.Services.Web.csproj", "{BFF93095-EC21-4F5D-9A93-8C847D1E953C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CL.Services.Contracts", "CL.WebServices.Contracts\CL.Services.Contracts.csproj", "{B50CEE30-68DD-4127-ACC1-F01D269FD491}"
@@ -8,13 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CL.Services.Business", "CL.Services.Business\CL.Services.Business.csproj", "{BD3F2597-DAF2-4EA4-A4C1-8BAF089DB894}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CL.Services.Data", "CL.Services.Data\CL.Services.Data.csproj", "{024567F7-B7E1-4B55-856A-8A887AD7D3A9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{28CE7B3D-E615-4B07-B6B9-1614C314A1D1}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
 EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "CL.Services.Web.Azure", "CL.Services.Web.Azure\CL.Services.Web.Azure.ccproj", "{DE8F6AC9-CF31-4A16-BE2C-B411BE66FA05}"
 EndProject

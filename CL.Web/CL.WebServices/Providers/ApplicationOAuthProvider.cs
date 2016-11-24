@@ -39,15 +39,20 @@ namespace CL.Services.Web.Providers
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             var userManager = context.OwinContext.GetUserManager<Business.User.UserManager>();
-
-            Contracts.IUser foundUser = await userManager.FindAsync(context.UserName, context.Password);
+            
+            Contracts.User foundUser = await userManager.FindAsync(context.UserName, context.Password);
             if (foundUser == null)
             {
-                context.SetError("invalid_grant", "The user name or password is incorrect.");
                 context.Rejected();
+                context.SetError("The user name or password is incorrect.");
+                //context.SetError("invalid_grant", "The user name or password is incorrect.");
                 return;
             }
 
+            var userRepo = new Data.Repository.UserRepository();
+            string deviceToken = context.OwinContext.Get<string>("device_token");
+            userRepo.SetDeviceToken(foundUser.Id, deviceToken);
+            
             Business.User.User user = new Business.User.User(foundUser);
 
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager, OAuthDefaults.AuthenticationType);
@@ -66,7 +71,10 @@ namespace CL.Services.Web.Providers
             // Resource owner password credentials does not provide a client ID.
             if (context.ClientId == null)
                 context.Validated();
-            
+
+            string device_token = context.Parameters.Where(f => f.Key == "device_token").Select(f => f.Value).SingleOrDefault()[0];
+            context.OwinContext.Set<string>("device_token", device_token);
+
 
             return Task.FromResult<object>(null);
         }

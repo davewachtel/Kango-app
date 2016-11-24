@@ -7,6 +7,8 @@ using System.Text;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using CL.Services.Contracts;
+using Newtonsoft.Json.Linq;
+using PushSharp.Apple;
 
 namespace CL.Services.Data.Repository
 {
@@ -75,6 +77,30 @@ namespace CL.Services.Data.Repository
             return response;
         }
 
+        public Dictionary<String, bool> CheckNumbers(String[] phoneNumbers)
+        {
+            if (phoneNumbers.Length == 0)
+            {
+                throw new ArgumentNullException("phoneNumbers");
+            }
+
+            Dictionary<String, bool> data = new Dictionary<string, bool>();
+            foreach (String phone in phoneNumbers)
+            {
+                var numbers = this.Context.Users.Where(u => u.PhoneNumber == phone).FirstOrDefault();
+                if (numbers != null)
+                {
+                    data[phone] = true;
+                }
+                else
+                {
+                    data[phone] = false;
+                }
+            }
+
+            return data;
+        }
+
         public int SendInboxMessages(String fromUserId, IShare shareMessage)
         {
             if (shareMessage.AssetId == 0)
@@ -82,6 +108,24 @@ namespace CL.Services.Data.Repository
 
             if (shareMessage.ToUserId == null || shareMessage.ToUserId.Length == 0)
                 throw new ArgumentNullException("ToUserId");
+
+            string path = System.AppDomain.CurrentDomain.BaseDirectory + "App_Data\\CertificatesLive.p12";
+
+            var config = new ApnsConfiguration(ApnsConfiguration.ApnsServerEnvironment.Production,
+              path, "12345", true);
+
+
+            var query1 = from user in this.Context.Users
+                         where user.Id == fromUserId
+                         select user.device_id;
+
+            string did = query1.First().ToString();
+
+            PushNotifications.Apple.QueueNotification(new ApnsNotification
+            {
+                DeviceToken = did,
+                Payload = JObject.Parse("{\"aps\":{\"alert\":\"You Just share a media\",\"badge\":1}}")
+            });
 
             foreach (String userId in shareMessage.ToUserId)
             {
@@ -94,6 +138,18 @@ namespace CL.Services.Data.Repository
                 };
 
                 this.Context.Shares.Add(share);
+
+                var q = from user in this.Context.Users
+                         where user.Id == userId
+                        select user.device_id;
+
+                string did2 = q.First().ToString();
+
+               PushNotifications.Apple.QueueNotification(new ApnsNotification
+                {
+                    DeviceToken = did2,
+                    Payload = JObject.Parse("{\"aps\":{\"alert\":\"Share a media with you by other user\",\"badge\":1}}")
+                });
             }
 
             return this.Context.SaveChanges();
@@ -112,6 +168,70 @@ namespace CL.Services.Data.Repository
 
             Context.Views.Add(view);
             return Context.SaveChanges() > 0;
+        }
+
+        public bool UpdateProfile(String userId, String PhoneNumber, String notify)
+        {
+            var user = Context.Users.FirstOrDefault(x => x.Id == userId);
+            user.PhoneNumber = PhoneNumber;
+            user.notify_me = notify;
+            return Context.SaveChanges() > 0;
+        }
+
+        public bool SetDeviceToken(String userId, String device_id)
+        {
+            var user = Context.Users.FirstOrDefault(x => x.Id == userId);
+            user.device_id = device_id;
+            return Context.SaveChanges() > 0;
+        }
+
+        public IPagedResponse<Contracts.Models.UserView> GetAll(string userid,int pageNumber, int pageSize)
+        {
+            if (userid == null)
+                throw new ArgumentException("Please Provide UserId");
+
+            if (pageNumber <= 0)
+                throw new ArgumentException("Page number must exceed 0.", "pageNumber");
+
+            if (pageSize <= 0)
+                throw new ArgumentException("Page size must exceed 0.", "pageSize");
+
+            int totalCount = 0;
+
+            List<string> validValues = new List<string>() ;
+
+            var query2 = from frnd in this.Context.Friends
+                         where userid == frnd.Userfrom
+                         select frnd.Userto;
+            if (query2 == null || query2 !=null)
+            {
+                validValues.Add(userid);
+            }
+            
+
+            foreach (string item in query2)
+            {
+                validValues.Add(item);
+            }
+
+           var qry = from user in this.Context.Users
+                      where !validValues.Contains(user.Id)
+                      select user;
+
+            var pageQuery = this.PagedResult(qry, pageNumber, pageSize, a => a.Email, true, out totalCount);
+
+            List<Contracts.Models.UserView> lstResults = new List<Contracts.Models.UserView>();
+            foreach (Context.User users in pageQuery)
+            {
+                var result = Mappers.CLMapper.MapUser(users);
+                lstResults.Add(result);
+            }
+
+            return new PagedResponse<Contracts.Models.UserView>()
+            {
+                TotalCount = totalCount,
+                Data = lstResults
+            };
         }
     }
 }

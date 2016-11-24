@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\Assets\IAsset.cs" />
     <Compile Include="Interfaces\Assets\IAssetType.cs" />
+    <Compile Include="Interfaces\Friends\IFriend.cs" />
     <Compile Include="Interfaces\Media\IMedia.cs" />
     <Compile Include="Interfaces\Media\IMediaType.cs" />
     <Compile Include="Interfaces\Response\IDeleteResponse.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Interfaces\Tags\ITag.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Models\Assets\Asset.cs" />
+    <Compile Include="Models\Friend\Friend.cs" />
     <Compile Include="Models\Media\Media.cs" />
     <Compile Include="Models\Media\MediaType.cs" />
     <Compile Include="Models\Responses\DeleteResponse.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Models\Tags\Tag.cs" />
     <Compile Include="Interfaces\Users\IUser.cs" />
     <Compile Include="Models\Users\User.cs" />
+    <Compile Include="Models\Users\UserView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

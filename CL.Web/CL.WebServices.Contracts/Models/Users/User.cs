@@ -8,6 +8,8 @@ namespace CL.Services.Contracts
 {
     public class User : Contracts.IUser
     {
+        public readonly string password;
+
         public User()
         {
             this.Id = Guid.NewGuid().ToString();
@@ -24,11 +26,18 @@ namespace CL.Services.Contracts
         public virtual string SecurityStamp { get; set; }
         public virtual string UserName { get; set; }
 
+        public virtual string PhoneNumber { get; set; }
+
+        public virtual string notify_me { get; set; }
+
         public virtual IList<IRole> Roles { get; set; }
 
         public virtual string Email { get; set; }
 
         public virtual bool EmailConfirmed { get; set; }
+        public string Username { get; set; }
+
+        public string device_id { get; set; }
 
         public static User ToUser(Contracts.IUser user)
         {
@@ -39,7 +48,10 @@ namespace CL.Services.Contracts
                 SecurityStamp = user.SecurityStamp,
                 UserName = user.UserName,
                 Email = user.Email,
-                EmailConfirmed = user.EmailConfirmed
+                EmailConfirmed = user.EmailConfirmed,
+                PhoneNumber = user.PhoneNumber,
+                notify_me = user.notify_me,
+                device_id = user.device_id
             };
 
             if(user.Roles != null)

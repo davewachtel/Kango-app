@@ -26,6 +26,8 @@ namespace CL.Services.Business.User
             return repo.GetUserStore();
         }
 
+        
+
         public static IPagedResponse<IInboxMessage> GetInboxByUserId(String userId, int page, int pageSize)
         {
             if (String.IsNullOrWhiteSpace(userId))
@@ -42,6 +44,15 @@ namespace CL.Services.Business.User
 
             UserRepository rep = new UserRepository();
             return rep.MarkMessageAsReadOrUnRead(userId, message.MessageId, message.IsRead);
+        }
+
+        public static Dictionary<String, bool> CheckNumbers(String[] numbers)
+        {
+            if (numbers.Length == 0)
+                throw new ArgumentNullException("numbers");
+
+            UserRepository rep = new UserRepository();
+            return rep.CheckNumbers(numbers);
         }
 
         public static int SendInboxMessages(String fromUserId, IShare shareMessage)
@@ -77,7 +88,10 @@ namespace CL.Services.Business.User
                 Id = user.Id,
                 UserName = user.UserName,
                 PasswordHash = user.PasswordHash,
-                SecurityStamp = user.SecurityStamp
+                SecurityStamp = user.SecurityStamp,
+                PhoneNumber = user.PhoneNumber,
+                notify_me = user.notify_me,
+                device_id = user.device_id
             };
         }
 
@@ -121,5 +135,23 @@ namespace CL.Services.Business.User
             get { return this._User.UserName; }
             set { this._User.UserName = value; }
         }
+        public string PhoneNumber
+        {
+            get { return this._User.PhoneNumber; }
+            set { this._User.PhoneNumber = value; }
+        }
+
+        public string notify_me
+        {
+            get { return this._User.notify_me; }
+            set { this._User.notify_me = value; }
+        }
+
+        public string device_id
+        {
+            get { return this._User.device_id; }
+            set { this._User.device_id = value; }
+        }
+
     }
 }

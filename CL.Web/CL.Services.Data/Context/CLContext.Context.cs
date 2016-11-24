@@ -32,5 +32,6 @@ namespace CL.Services.Data.Context
         public DbSet<View> Views { get; set; }
         public DbSet<Share> Shares { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Friend> Friends { get; set; }
     }
 }

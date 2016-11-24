@@ -22,6 +22,8 @@
           <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="notify_me" Type="nvarchar" MaxLength="128" />
+          <Property Name="device_id" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Asset">
           <Key>
@@ -41,6 +43,14 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AssetId" Type="int" Nullable="false" />
           <Property Name="TagId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Friend">
+          <Key>
+            <PropertyRef Name="Friend_Id" />
+          </Key>
+          <Property Name="Friend_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Userto" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Userfrom" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="Share">
           <Key>
@@ -173,6 +183,7 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Asset" EntityType="Self.Asset" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AssetTag" EntityType="Self.AssetTag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Friend" EntityType="Self.Friend" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Share" EntityType="Self.Share" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tag" EntityType="Self.Tag" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Views" EntityType="Self.Views" Schema="dbo" store:Type="Tables" />
@@ -252,6 +263,7 @@
             <End Role="AspNetUser" EntitySet="Users" />
             <End Role="View" EntitySet="Views" />
           </AssociationSet>
+          <EntitySet Name="Friends" EntityType="CLModel.Friend" />
           </EntityContainer>
         <EntityType Name="Asset">
           <Key>
@@ -393,6 +405,8 @@
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="notify_me" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="device_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Share_FromUserId_Id">
           <End Type="CLModel.User" Role="AspNetUser" Multiplicity="1" />
@@ -430,6 +444,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Friend">
+          <Key>
+            <PropertyRef Name="Friend_Id" />
+          </Key>
+          <Property Name="Friend_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Userto" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Userfrom" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -494,6 +516,8 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="CLModel.User">
               <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="device_id" ColumnName="device_id" />
+                <ScalarProperty Name="notify_me" ColumnName="notify_me" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
@@ -507,6 +531,15 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Hometown" ColumnName="Hometown" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Friends">
+            <EntityTypeMapping TypeName="CLModel.Friend">
+              <MappingFragment StoreEntitySet="Friend">
+                <ScalarProperty Name="Userfrom" ColumnName="Userfrom" />
+                <ScalarProperty Name="Userto" ColumnName="Userto" />
+                <ScalarProperty Name="Friend_Id" ColumnName="Friend_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

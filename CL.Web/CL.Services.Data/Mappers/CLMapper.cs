@@ -1,4 +1,5 @@
 ﻿using CL.Services.Contracts.Assets;
+using CL.Services.Contracts.Interfaces;
 using CL.Services.Data.Context;
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,34 @@ namespace CL.Services.Data.Mappers
             Contracts.Tag result = new Contracts.Tag();
             result.Id = tag.Id;
             result.Name = tag.Title;
+
+            return result;
+        }
+
+        public static IFriend MapFriend(Friend frnd)
+        {
+            if (frnd == null)
+                return null;
+
+            Contracts.Friend result = new Contracts.Friend();
+            result.Friend_Id = frnd.Friend_Id;
+            result.Userto = frnd.Userto;
+            result.Userfrom = frnd.Userfrom;
+
+            return result;
+        }
+
+        public static Contracts.Models.UserView MapUser(User user)
+        {
+            if (user == null)
+                return null;
+
+            Contracts.Models.UserView result = new Contracts.Models.UserView();
+            result.Id = user.Id;
+            result.PhoneNumber = user.PhoneNumber;
+            result.Email = user.Email;
+            //result.UserName = user.UserName;
+           
 
             return result;
         }

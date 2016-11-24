@@ -14,9 +14,12 @@ namespace CL.Services.Contracts
         string SecurityStamp { get; set; }
 
         string Email { get; set; }
-
         bool EmailConfirmed { get; set; }
 
         IList<IRole> Roles { get; set; }
+        string PhoneNumber { get; set; } 
+        string notify_me { get; set; }
+        string device_id { get; set; }
+
     }
 }

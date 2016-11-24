@@ -5,20 +5,21 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="5ad2a3c577d1451db69ff6332e34defd" Name="Diagram1" ZoomLevel="100">
-        <EntityTypeShape EntityType="CLModel.Asset" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CLModel.AssetTag" Width="1.5" PointX="6.5" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CLModel.Tag" Width="1.5" PointX="6.5" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CLModel.Asset" Width="1.5" PointX="5.5" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CLModel.AssetTag" Width="1.5" PointX="8.75" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CLModel.Tag" Width="1.5" PointX="8.875" PointY="3.25" IsExpanded="true" />
         <AssociationConnector Association="CLModel.AssetAssetTag" />
         <AssociationConnector Association="CLModel.AssetTagTag" />
-        <EntityTypeShape EntityType="CLModel.View" Width="1.5" PointX="2.625" PointY="0.75" />
+        <EntityTypeShape EntityType="CLModel.View" Width="1.5" PointX="3.25" PointY="0.5" />
         <AssociationConnector Association="CLModel.FK_Views_AssetId_Asset_Id" />
-        <EntityTypeShape EntityType="CLModel.Share" Width="1.5" PointX="2.625" PointY="4.125" />
+        <EntityTypeShape EntityType="CLModel.Share" Width="1.5" PointX="4.375" PointY="5" />
         <AssociationConnector Association="CLModel.FK_Share_Asset_Id" />
         <AssociationConnector Association="CLModel.FK_Views_ShareId_Share_Id" />
-        <EntityTypeShape EntityType="CLModel.User" Width="1.5" PointX="0.5" PointY="1.75" />
+        <EntityTypeShape EntityType="CLModel.User" Width="1.5" PointX="0.5" PointY="0.5" />
         <AssociationConnector Association="CLModel.FK_Share_FromUserId_Id" />
         <AssociationConnector Association="CLModel.FK_Share_ToUserId_Id" />
         <AssociationConnector Association="CLModel.FK_Views_UserId_AspNetUsers_Id" />
+        <EntityTypeShape EntityType="CLModel.Friend" Width="1.5" PointX="1.5" PointY="5.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

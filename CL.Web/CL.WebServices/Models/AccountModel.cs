@@ -21,11 +21,12 @@ namespace CL.Services.Web.Models.User
 
     public class UserModel : IUser
     {
+       
         public string Id { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "User name")]
+        [Display(Name = "Email")]
         public string UserName { get; set; }
 
         [Required]
@@ -34,5 +35,47 @@ namespace CL.Services.Web.Models.User
         [Display(Name = "Password")]
         public string Password { get; set; }
 
+        //[Required(ErrorMessage = "Your must provide a PhoneNumber")]
+        //[StringLength(15, ErrorMessage = "Not a valid Phone number", MinimumLength = 10)]
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "PhoneNumber")]
+        public string PhoneNumber { get; set; }
+    }
+
+    public class sysEmail
+    {
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+    }
+    public class profie
+    {
+        [Required]
+        [Display(Name = "UserId")]
+        public string Id { get; set; }
+    }
+
+    public class updateProfile
+    {
+        [Required]
+        [Display(Name = "Id")]
+        public string Id { get; set; }
+
+        [Required]
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "PhoneNumber")]
+        public string PhoneNumber { get; set; }
+
+        
+        [Display(Name = "Noti")]
+        public string noti { get; set; }
+
+    }
+    public class CheckNumbers
+    {
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "PhoneNumber")]
+        public String[] PhoneNumber { get; set; }
     }
 }
