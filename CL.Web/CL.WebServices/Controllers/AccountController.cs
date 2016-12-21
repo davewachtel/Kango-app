@@ -176,6 +176,14 @@ namespace CL.Services.Web.Controllers
             return response;
         }
 
+        [HttpPost]
+        [Route("checkUsers")]
+        public Dictionary<String, IList<dynamic>> CheckUsers([FromBody] CheckUsers user)
+        {
+            var response = Business.User.User.CheckUsers(user.Id,user.PhoneNumber);
+            return response;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

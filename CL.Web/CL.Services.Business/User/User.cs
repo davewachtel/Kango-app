@@ -55,6 +55,15 @@ namespace CL.Services.Business.User
             return rep.CheckNumbers(numbers);
         }
 
+        public static Dictionary<String, IList<dynamic>> CheckUsers(String userId, String[] numbers)
+        {
+            if (numbers.Length == 0)
+                throw new ArgumentNullException("numbers");
+
+            UserRepository rep = new UserRepository();
+            return rep.CheckUsers(userId, numbers);
+        }
+
         public static int SendInboxMessages(String fromUserId, IShare shareMessage)
         {
             UserRepository rep = new UserRepository();

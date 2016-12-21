@@ -101,6 +101,64 @@ namespace CL.Services.Data.Repository
             return data;
         }
 
+        public Dictionary<String, IList<dynamic>> CheckUsers(String id,String[] phoneNumbers)
+        {
+
+          
+
+            if (phoneNumbers.Length == 0)
+            {
+                throw new ArgumentNullException("phoneNumbers");
+            }
+
+            Dictionary<String, IList<dynamic>> maindata = new Dictionary<string, IList<dynamic>>();
+
+            List<dynamic> data = new List<dynamic>();
+
+
+            
+            foreach (String phone in phoneNumbers)
+            {
+               
+                var numbers = this.Context.Users.Where(u => u.PhoneNumber == phone).FirstOrDefault();
+                var query = (from frnd in this.Context.Friends
+                            join user in this.Context.Users on frnd.Userto equals user.Id
+                            where (frnd.Userfrom == id) && user.PhoneNumber == phone
+                            select user.PhoneNumber).FirstOrDefault();
+
+
+                if (query !=null)
+                {
+                    var fid = from user in this.Context.Users
+                                 where user.PhoneNumber == phone
+                                 select user.Id;
+
+                    string user_id = fid.First().ToString();
+
+                    data.Add(new {phone = phone, staus = "Friend", User_id = user_id});
+                }
+
+                else if (numbers != null)
+                {
+                    var uid = from user in this.Context.Users
+                              where user.PhoneNumber == phone
+                              select user.Id;
+
+                    string u_id = uid.First().ToString();
+
+                    data.Add(new { phone = phone, staus = "User", User_id = u_id});
+                }
+                else
+                {
+                    data.Add(new { phone = phone, staus = "No User"});
+                }
+            }
+
+            
+            maindata["phone"] = data;
+            return maindata;
+        }
+
         public int SendInboxMessages(String fromUserId, IShare shareMessage)
         {
             if (shareMessage.AssetId == 0)
@@ -121,12 +179,20 @@ namespace CL.Services.Data.Repository
 
             string did = query1.First().ToString();
 
-            PushNotifications.Apple.QueueNotification(new ApnsNotification
-            {
-                DeviceToken = did,
-                Payload = JObject.Parse("{\"aps\":{\"alert\":\"You Just share a media\",\"badge\":1}}")
-            });
+            var noti1 = from user in this.Context.Users
+                        where user.Id == fromUserId
+                        select user.notify_me;
 
+            string note1 = noti1.First().ToString();
+            if (note1 == "true" || note1 == null)
+            {
+                PushNotifications.Apple.QueueNotification(new ApnsNotification
+                {
+                    DeviceToken = did,
+                    Payload = JObject.Parse("{\"aps\":{\"alert\":\"You Just share a media\",\"badge\":1}}")
+                });
+
+            }
             foreach (String userId in shareMessage.ToUserId)
             {
                 var share = new Data.Context.Share()
@@ -145,11 +211,19 @@ namespace CL.Services.Data.Repository
 
                 string did2 = q.First().ToString();
 
-               PushNotifications.Apple.QueueNotification(new ApnsNotification
+                var noti2 = from user in this.Context.Users
+                            where user.Id == userId
+                            select user.notify_me;
+
+                string note2 = noti2.First().ToString();
+                if (note2 == "true" || note2 == null)
                 {
-                    DeviceToken = did2,
-                    Payload = JObject.Parse("{\"aps\":{\"alert\":\"Share a media with you by other user\",\"badge\":1}}")
-                });
+                    PushNotifications.Apple.QueueNotification(new ApnsNotification
+                    {
+                        DeviceToken = did2,
+                        Payload = JObject.Parse("{\"aps\":{\"alert\":\"Share a media with you by other user\",\"badge\":1}}")
+                    });
+                }
             }
 
             return this.Context.SaveChanges();
@@ -190,11 +264,11 @@ namespace CL.Services.Data.Repository
             if (userid == null)
                 throw new ArgumentException("Please Provide UserId");
 
-            if (pageNumber <= 0)
+            /*if (pageNumber <= 0)
                 throw new ArgumentException("Page number must exceed 0.", "pageNumber");
 
             if (pageSize <= 0)
-                throw new ArgumentException("Page size must exceed 0.", "pageSize");
+                throw new ArgumentException("Page size must exceed 0.", "pageSize");*/
 
             int totalCount = 0;
 
@@ -217,6 +291,11 @@ namespace CL.Services.Data.Repository
            var qry = from user in this.Context.Users
                       where !validValues.Contains(user.Id)
                       select user;
+
+            if (pageNumber == 0)
+            {
+                pageSize = totalCount;
+            }
 
             var pageQuery = this.PagedResult(qry, pageNumber, pageSize, a => a.Email, true, out totalCount);
 

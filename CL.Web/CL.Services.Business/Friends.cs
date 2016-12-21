@@ -15,11 +15,11 @@ namespace CL.Services.Business
     {
         public IPagedResponse<Contracts.Models.UserView> GetAll(String UserId, int pageNumber, int pageSize)
         {
-            if (pageNumber <= 0)
+            /*if (pageNumber <= 0)
                 throw new ArgumentException("Page number must exceed 0.");
 
             if (pageSize <= 0)
-                throw new ArgumentException("Page size must exceed 0.");
+                throw new ArgumentException("Page size must exceed 0.");*/
 
             using (FriendRepository repo = new FriendRepository())
             {
@@ -31,11 +31,11 @@ namespace CL.Services.Business
             if (userid == null)
                 throw new ArgumentException("Please Provide UserId");
 
-            if (pageNumber <= 0)
+            /*if (pageNumber <= 0)
                 throw new ArgumentException("Page number must exceed 0.");
 
             if (pageSize <= 0)
-                throw new ArgumentException("Page size must exceed 0.");
+                throw new ArgumentException("Page size must exceed 0.");*/
 
             using (UserRepository repo = new UserRepository())
             {

@@ -35,8 +35,6 @@ namespace CL.Services.Web.Models.User
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        //[Required(ErrorMessage = "Your must provide a PhoneNumber")]
-        //[StringLength(15, ErrorMessage = "Not a valid Phone number", MinimumLength = 10)]
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "PhoneNumber")]
         public string PhoneNumber { get; set; }
@@ -62,7 +60,6 @@ namespace CL.Services.Web.Models.User
         [Display(Name = "Id")]
         public string Id { get; set; }
 
-        [Required]
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "PhoneNumber")]
         public string PhoneNumber { get; set; }
@@ -74,6 +71,16 @@ namespace CL.Services.Web.Models.User
     }
     public class CheckNumbers
     {
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "PhoneNumber")]
+        public String[] PhoneNumber { get; set; }
+    }
+    public class CheckUsers
+    {
+        [Required]
+        [Display(Name = "Id")]
+        public string Id { get; set; }
+
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "PhoneNumber")]
         public String[] PhoneNumber { get; set; }
