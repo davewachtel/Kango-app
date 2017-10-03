@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5ad2a3c577d1451db69ff6332e34defd" Name="Diagram1" ZoomLevel="100">
+      <Diagram DiagramId="5ad2a3c577d1451db69ff6332e34defd" Name="Diagram1" ZoomLevel="82">
         <EntityTypeShape EntityType="CLModel.Asset" Width="1.5" PointX="5.5" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="CLModel.AssetTag" Width="1.5" PointX="8.75" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="CLModel.Tag" Width="1.5" PointX="8.875" PointY="3.25" IsExpanded="true" />
@@ -15,7 +15,7 @@
         <EntityTypeShape EntityType="CLModel.Share" Width="1.5" PointX="4.375" PointY="5" />
         <AssociationConnector Association="CLModel.FK_Share_Asset_Id" />
         <AssociationConnector Association="CLModel.FK_Views_ShareId_Share_Id" />
-        <EntityTypeShape EntityType="CLModel.User" Width="1.5" PointX="0.5" PointY="0.5" />
+        <EntityTypeShape EntityType="CLModel.User" PointX="1" PointY="0.75" Width="1.5" />
         <AssociationConnector Association="CLModel.FK_Share_FromUserId_Id" />
         <AssociationConnector Association="CLModel.FK_Share_ToUserId_Id" />
         <AssociationConnector Association="CLModel.FK_Views_UserId_AspNetUsers_Id" />

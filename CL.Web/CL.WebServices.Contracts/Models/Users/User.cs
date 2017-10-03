@@ -28,7 +28,7 @@ namespace CL.Services.Contracts
 
         public virtual string PhoneNumber { get; set; }
 
-        public virtual string notify_me { get; set; }
+        public virtual bool notify_me { get; set; }
 
         public virtual IList<IRole> Roles { get; set; }
 

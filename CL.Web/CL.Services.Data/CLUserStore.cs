@@ -16,12 +16,12 @@ namespace CL.Services.Data
     internal class CLUserStore : IUserStore<Contracts.User>, IUserPasswordStore<Contracts.User>, IUserSecurityStampStore<Contracts.User>, IUserEmailStore<Contracts.User>, IUserRoleStore<Contracts.User>, IUserClaimStore<Contracts.User>, IUserPhoneNumberStore<Contracts.User>
     {
         readonly CLIdentityDBContext context;
-        readonly UserStore<IdentityUser> userStore;
+        readonly UserStore<AppUser> userStore;
 
         public CLUserStore(CLIdentityDBContext context)
         {
             this.context = context;
-            this.userStore = new UserStore<IdentityUser>(context);
+            this.userStore = new UserStore<AppUser>(context);
         }
         public Task CreateAsync(Contracts.User user)
         {
@@ -39,14 +39,14 @@ namespace CL.Services.Data
         }
         public async Task<Contracts.User> FindByIdAsync(string userId)
         {
-            IdentityUser result = await context.Users.Where(u => u.Id.ToLower() == userId.ToLower()).FirstOrDefaultAsync();
+            AppUser result = (AppUser)await context.Users.Where(u => u.Id.ToLower() == userId.ToLower()).FirstOrDefaultAsync();
             Contracts.User user = ToUser(result);
 
             return user;
         }
         public async Task<Contracts.User> FindByNameAsync(string userName)
         {
-            IdentityUser result = await context.Users.Where(u => u.UserName.ToLower() == userName.ToLower()).FirstOrDefaultAsync();
+            AppUser result = (AppUser)await context.Users.Where(u => u.UserName.ToLower() == userName.ToLower()).FirstOrDefaultAsync();
             Contracts.User user = ToUser(result);
 
             return user;
@@ -106,7 +106,7 @@ namespace CL.Services.Data
 
         public async Task<Contracts.User> FindByEmailAsync(string email)
         {
-            IdentityUser result = await context.Users.Where(u => u.Email.ToLower() == email.ToLower()).FirstOrDefaultAsync();
+            AppUser result = (AppUser)await context.Users.Where(u => u.Email.ToLower() == email.ToLower()).FirstOrDefaultAsync();
             Contracts.User user = ToUser(result);
 
             return user;
@@ -206,7 +206,7 @@ namespace CL.Services.Data
             return task;
         }
 
-        private Contracts.User ToUser(IdentityUser identity)
+        private Contracts.User ToUser(AppUser identity)
         {
             if (identity == null)
                 return null;
@@ -217,7 +217,7 @@ namespace CL.Services.Data
             return user;
         }
 
-        private static void SetApplicationUser(Contracts.User user, IdentityUser identityUser)
+        private static void SetApplicationUser(Contracts.User user, AppUser identityUser)
         {
             if (identityUser != null)
             {
@@ -228,15 +228,17 @@ namespace CL.Services.Data
                 user.Email = identityUser.Email;
                 user.EmailConfirmed = identityUser.EmailConfirmed;
                 user.PhoneNumber = identityUser.PhoneNumber;
+                user.notify_me = identityUser.notify_me;
+                user.device_id = identityUser.device_id;
 
             }
             else
                 user = null;
         }
 
-        private IdentityUser ToIdentityUser(Contracts.IUser user)
+        private AppUser ToIdentityUser(Contracts.IUser user)
         {
-            return new IdentityUser
+            return new AppUser
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -244,7 +246,9 @@ namespace CL.Services.Data
                 SecurityStamp = user.SecurityStamp,
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                notify_me = user.notify_me
+
             };
         }
 

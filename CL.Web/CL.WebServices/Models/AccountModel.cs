@@ -37,7 +37,7 @@ namespace CL.Services.Web.Models.User
 
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "PhoneNumber")]
-        public string PhoneNumber { get; set; }
+        public String PhoneNumber { get; set; }
     }
 
     public class sysEmail
@@ -60,13 +60,14 @@ namespace CL.Services.Web.Models.User
         [Display(Name = "Id")]
         public string Id { get; set; }
 
+        [StringLength(100, ErrorMessage = "The Phone Number Must be 10 digits long.", MinimumLength = 10)]
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "PhoneNumber")]
-        public string PhoneNumber { get; set; }
+        public String PhoneNumber { get; set; }
 
         
         [Display(Name = "Noti")]
-        public string noti { get; set; }
+        public bool noti { get; set; }
 
     }
     public class CheckNumbers

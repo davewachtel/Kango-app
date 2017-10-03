@@ -46,7 +46,7 @@ namespace CL.Services.Data.Repository
             };
         }
 
-        public IPutResponse MarkMessageAsReadOrUnRead(String userId, int messageId, bool isRead)
+        public IPutResponse MarkMessageAsReadOrUnRead(String userId, int messageId, int Read)
         {
             if (String.IsNullOrWhiteSpace(userId))
             {
@@ -66,7 +66,7 @@ namespace CL.Services.Data.Repository
 
             if (message != null)
             {
-                if (isRead)
+                if (Read == 1)
                     message.ReadDt = DateTime.UtcNow;
                 else
                     message.ReadDt = null;
@@ -102,9 +102,7 @@ namespace CL.Services.Data.Repository
         }
 
         public Dictionary<String, IList<dynamic>> CheckUsers(String id,String[] phoneNumbers)
-        {
-
-          
+        {  
 
             if (phoneNumbers.Length == 0)
             {
@@ -115,46 +113,49 @@ namespace CL.Services.Data.Repository
 
             List<dynamic> data = new List<dynamic>();
 
-
-            
             foreach (String phone in phoneNumbers)
             {
                
-                var numbers = this.Context.Users.Where(u => u.PhoneNumber == phone).FirstOrDefault();
+                //var numbers = this.Context.Users.Where(u => u.PhoneNumber == phone).FirstOrDefault();
+                var  n = this.Context.Users.Where(u => u.PhoneNumber == phone).Select(u => new { u.Id, u.PhoneNumber}).ToList();
                 var query = (from frnd in this.Context.Friends
                             join user in this.Context.Users on frnd.Userto equals user.Id
                             where (frnd.Userfrom == id) && user.PhoneNumber == phone
-                            select user.PhoneNumber).FirstOrDefault();
-
-
-                if (query !=null)
+                            select user.Id).FirstOrDefault();
+ 
+                if (query != null && n.Count >= 1)
                 {
-                    var fid = from user in this.Context.Users
-                                 where user.PhoneNumber == phone
-                                 select user.Id;
-
-                    string user_id = fid.First().ToString();
-
-                    data.Add(new {phone = phone, staus = "Friend", User_id = user_id});
+                    if (id == query)
+                    {
+                        //do nothing
+                    }
+                    else
+                    {
+                        data.Add(new { phone = phone, staus = "Friend", User_id = query });
+                    }
                 }
-
-                else if (numbers != null)
+                else if (n.Count >= 1)
                 {
-                    var uid = from user in this.Context.Users
-                              where user.PhoneNumber == phone
-                              select user.Id;
-
-                    string u_id = uid.First().ToString();
-
-                    data.Add(new { phone = phone, staus = "User", User_id = u_id});
+                    //foreach (var item in n)
+                    //{
+                    if (id == n[0].Id)
+                    {
+                        //do nothing
+                    }
+                    else
+                    {
+                        data.Add(new { phone = n[0].PhoneNumber, staus = "User", User_id = n[0].Id });
+                    }
+                    //}
                 }
                 else
                 {
-                    data.Add(new { phone = phone, staus = "No User"});
+                    data.Add(new { phone = phone, staus = "No User" });
                 }
+                
             }
 
-            
+
             maindata["phone"] = data;
             return maindata;
         }
@@ -172,27 +173,20 @@ namespace CL.Services.Data.Repository
             var config = new ApnsConfiguration(ApnsConfiguration.ApnsServerEnvironment.Production,
               path, "12345", true);
 
+            //PushNotifications.Apple = new ApnsServiceBroker(config);
 
-            var query1 = from user in this.Context.Users
-                         where user.Id == fromUserId
-                         select user.device_id;
+            var note = this.Context.Users.Where(u => u.Id == fromUserId).Select(u => new { u.device_id, u.notify_me }).ToList();
 
-            string did = query1.First().ToString();
-
-            var noti1 = from user in this.Context.Users
-                        where user.Id == fromUserId
-                        select user.notify_me;
-
-            string note1 = noti1.First().ToString();
-            if (note1 == "true" || note1 == null)
+            string note1 = note[0].notify_me.ToString();
+            /*if ((note1 == "True" || note1 == null) && (!String.IsNullOrEmpty(note[0].device_id)))
             {
                 PushNotifications.Apple.QueueNotification(new ApnsNotification
                 {
-                    DeviceToken = did,
-                    Payload = JObject.Parse("{\"aps\":{\"alert\":\"You Just share a media\",\"badge\":1}}")
+                    DeviceToken = note[0].device_id,
+                    Payload = JObject.Parse("{\"aps\":{\"alert\":\"You Just shared a media\",\"sound\":\"default\"},\"asset_id\":"+ shareMessage.AssetId+"}")
                 });
 
-            }
+            }*/
             foreach (String userId in shareMessage.ToUserId)
             {
                 var share = new Data.Context.Share()
@@ -204,24 +198,20 @@ namespace CL.Services.Data.Repository
                 };
 
                 this.Context.Shares.Add(share);
+                this.Context.SaveChanges();
 
-                var q = from user in this.Context.Users
-                         where user.Id == userId
-                        select user.device_id;
+                int msgid = share.Id;
 
-                string did2 = q.First().ToString();
+                var note2 = this.Context.Users.Where(u => u.Id == userId).Select(u => new { u.device_id, u.notify_me }).ToList();
 
-                var noti2 = from user in this.Context.Users
-                            where user.Id == userId
-                            select user.notify_me;
+                string noti = note2[0].notify_me.ToString();
 
-                string note2 = noti2.First().ToString();
-                if (note2 == "true" || note2 == null)
+                if ((noti == "True" || noti == null) && (!String.IsNullOrEmpty(note2[0].device_id)))
                 {
                     PushNotifications.Apple.QueueNotification(new ApnsNotification
                     {
-                        DeviceToken = did2,
-                        Payload = JObject.Parse("{\"aps\":{\"alert\":\"Share a media with you by other user\",\"badge\":1}}")
+                        DeviceToken = note2[0].device_id,
+                        Payload = JObject.Parse("{\"aps\":{\"alert\":\"A friend sent you something awesome on Kango!\",\"sound\":\"default\"},\"asset_id\":" + shareMessage.AssetId + ",\"msgId\":" + msgid + "}")
                     });
                 }
             }
@@ -244,11 +234,18 @@ namespace CL.Services.Data.Repository
             return Context.SaveChanges() > 0;
         }
 
-        public bool UpdateProfile(String userId, String PhoneNumber, String notify)
+        public bool UpdateProfile(String userId, String PhoneNumber, Boolean notify)
         {
             var user = Context.Users.FirstOrDefault(x => x.Id == userId);
-            user.PhoneNumber = PhoneNumber;
-            user.notify_me = notify;
+
+           
+                user.PhoneNumber = PhoneNumber;
+        
+                
+            if(user.notify_me != notify)
+            {
+                user.notify_me = notify;
+            }
             return Context.SaveChanges() > 0;
         }
 
@@ -259,6 +256,26 @@ namespace CL.Services.Data.Repository
             return Context.SaveChanges() > 0;
         }
 
+        public bool PhoneNumberExist(String PhoneNumber)
+        {
+            if (!String.IsNullOrEmpty(PhoneNumber))
+            {
+                var number = this.Context.Users.Where(u => u.PhoneNumber == PhoneNumber).FirstOrDefault();
+
+                if (number != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
         public IPagedResponse<Contracts.Models.UserView> GetAll(string userid,int pageNumber, int pageSize)
         {
             if (userid == null)

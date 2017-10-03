@@ -17,8 +17,8 @@ namespace CL.Services.Contracts
         bool EmailConfirmed { get; set; }
 
         IList<IRole> Roles { get; set; }
-        string PhoneNumber { get; set; } 
-        string notify_me { get; set; }
+        string PhoneNumber { get; set; }
+        bool notify_me { get; set; }
         string device_id { get; set; }
 
     }

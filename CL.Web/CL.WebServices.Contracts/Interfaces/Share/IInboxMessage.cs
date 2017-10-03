@@ -19,5 +19,9 @@ namespace CL.Services.Contracts
         String TimeAgo { get; }
 
         bool IsRead { get; }
+
+        int read { get; }
+
+        String Phone { get; }
     }
 }

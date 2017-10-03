@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\Anum Jamil\Desktop\kango_app\CL.Web\CL.Services.Data\Context\CLContext.edmx'. 
+﻿// T4 code generation is enabled for model 'F:\My Desktop Data\kangoo_latest\kango_app\CL.Web\CL.Services.Data\Context\CLContext.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

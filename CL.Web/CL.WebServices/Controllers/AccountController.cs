@@ -18,6 +18,7 @@ using CL.Services.Business;
 namespace CL.Services.Web.Controllers
 {
     [AllowAnonymous]
+    [Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : CLApiController
     {
@@ -94,6 +95,8 @@ namespace CL.Services.Web.Controllers
         [Route("updateprofile")]
         public async Task<IHttpActionResult> Update([FromBody] updateProfile userModel)
         {
+            
+
             if (!ModelState.IsValid || userModel == null)
             {
                
@@ -109,23 +112,56 @@ namespace CL.Services.Web.Controllers
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, response1, Configuration.Formatters.JsonFormatter));
 
             }
+
             else
             {
-
-                bool result = repo.UpdateProfile(userModel.Id, userModel.PhoneNumber, userModel.noti);
-
-                if (result == false)
+                if (userModel.PhoneNumber != user.PhoneNumber)
                 {
-                    object response1 = new { message = "Something Went wrong" };
 
-                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, response1, Configuration.Formatters.JsonFormatter));
+                    bool res = repo.PhoneNumberExist(userModel.PhoneNumber);
+
+                    if (res == true)
+                    {
+                        object response1 = new { message = "This phone number is already in use." };
+
+                        return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, response1, Configuration.Formatters.JsonFormatter));
+                    }
+                    else
+                    {
+                        bool result = repo.UpdateProfile(userModel.Id, userModel.PhoneNumber, userModel.noti);
+
+                        if (result == false)
+                        {
+                            object response1 = new { message = "Something Went wrong" };
+
+                            return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, response1, Configuration.Formatters.JsonFormatter));
+                        }
+                        else
+                        {
+
+                            object response2 = new { message = "You Profile is Updated Now" };
+
+                            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, response2, Configuration.Formatters.JsonFormatter));
+                        }
+                    }
                 }
                 else
                 {
+                    bool result = repo.UpdateProfile(userModel.Id, userModel.PhoneNumber, userModel.noti);
 
-                    object response2 = new { message = "You Profile is Updated Now" };
+                    if (result == false)
+                    {
+                        object response1 = new { message = "Something Went wrong" };
 
-                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, response2, Configuration.Formatters.JsonFormatter));
+                        return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, response1, Configuration.Formatters.JsonFormatter));
+                    }
+                    else
+                    {
+
+                        object response2 = new { message = "You Profile is Updated Now" };
+
+                        return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, response2, Configuration.Formatters.JsonFormatter));
+                    }
                 }
             }
         }
@@ -142,28 +178,38 @@ namespace CL.Services.Web.Controllers
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest, error));
             }
 
-            
-            var user = new Contracts.User()
+            bool res = repo.PhoneNumberExist(userModel.PhoneNumber);
+            if (res == true)
             {
-                UserName = userModel.UserName,
-                Email = userModel.UserName,
-                PhoneNumber = userModel.PhoneNumber
-            };
-
-            IdentityResult result = await _repo.RegisterUser(user, userModel.Password, userModel.PhoneNumber);
-            
-            IHttpActionResult errorResult = GetErrorResult(result);
-
-
-            if (errorResult != null)
-            {
-                return errorResult;
+                object response = new { message = "This phone number is already in use." };
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, response, Configuration.Formatters.JsonFormatter));
             }
             else
             {
-                object response = new { message = "You have registered Successfully", Email = userModel.UserName, Password = userModel.Password };
 
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, response, Configuration.Formatters.JsonFormatter));
+                var user = new Contracts.User()
+                {
+                    UserName = userModel.UserName,
+                    Email = userModel.UserName,
+                    PhoneNumber = userModel.PhoneNumber,
+                    notify_me = true
+                };
+
+                IdentityResult result = await _repo.RegisterUser(user, userModel.Password, userModel.PhoneNumber);
+
+                IHttpActionResult errorResult = GetErrorResult(result);
+
+
+                if (errorResult != null)
+                {
+                    return errorResult;
+                }
+                else
+                {
+                    object response = new { message = "You have registered Successfully", Email = userModel.UserName, Password = userModel.Password };
+
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, response, Configuration.Formatters.JsonFormatter));
+                }
             }
 
         }
@@ -183,6 +229,8 @@ namespace CL.Services.Web.Controllers
             var response = Business.User.User.CheckUsers(user.Id,user.PhoneNumber);
             return response;
         }
+
+
 
         protected override void Dispose(bool disposing)
         {

@@ -38,6 +38,7 @@ namespace CL.Services.Data.Repository
             var config = new ApnsConfiguration(ApnsConfiguration.ApnsServerEnvironment.Production,
               path, "12345", true);
 
+            //PushNotifications.Apple = new ApnsServiceBroker(config);
 
             if (q1 != null || q2 != null)
             {
@@ -46,7 +47,8 @@ namespace CL.Services.Data.Repository
                     Id = 0
                 };
             }
-           
+            else
+            {
                 var frnd = new Data.Context.Friend()
                 {
                     Userto = friend.Userto,
@@ -69,56 +71,56 @@ namespace CL.Services.Data.Repository
                     Context.Friends.Add(frnd2);
                     Context.SaveChanges();
 
-                var query1 = from user in this.Context.Users
-                             where user.Id == friend.Userfrom
-                             select user.device_id;
+                    var query1 = from user in this.Context.Users
+                                 where user.Id == friend.Userfrom
+                                 select user.device_id;
 
-                var noti1 = from user in this.Context.Users
-                             where user.Id == friend.Userfrom
-                             select user.notify_me;
+                    var noti1 = from user in this.Context.Users
+                                where user.Id == friend.Userfrom
+                                select user.notify_me;
 
-                string note1 = noti1.First().ToString();
+                    //string note1 = noti1.First().ToString();
 
-                string did = query1.First().ToString();
+                    string did = query1.First().ToString();
 
-                if (note1 == "true" || note1 == null)
-                {
-                    PushNotifications.Apple.QueueNotification(new ApnsNotification
+                    /*if ((note1 == "True" || note1 == null) && (!String.IsNullOrEmpty(did)))
                     {
-                        DeviceToken = did,
-                        Payload = JObject.Parse("{\"aps\":{\"alert\":\"A Friend request sent by you to an other Kangoo user\",\"badge\":1}}")
-                    });
-                }
+                        PushNotifications.Apple.QueueNotification(new ApnsNotification
+                        {
+                            DeviceToken = did,
+                            Payload = JObject.Parse("{\"aps\":{\"alert\":\"A Friend request sent by you to an other Kangoo user\",\"sound\":\"default\"}}")
+                        });
+                    }*/
 
-                var query2 = from user in this.Context.Users
-                             where user.Id == friend.Userto
-                             select user.device_id;
+                    var query2 = from user in this.Context.Users
+                                 where user.Id == friend.Userto
+                                 select user.device_id;
 
-                string did2 = query1.First().ToString();
+                    string did2 = query2.First().ToString();
 
-                var noti2 = from user in this.Context.Users
-                            where user.Id == friend.Userto
-                            select user.notify_me;
+                    var noti2 = from user in this.Context.Users
+                                where user.Id == friend.Userto
+                                select user.notify_me;
 
-                string note2 = noti2.First().ToString();
+                    /*string note2 = noti2.First().ToString();
 
-                if(note2 == "true" || note2 == null)
-                { 
-                    PushNotifications.Apple.QueueNotification(new ApnsNotification
+                    if ((note2 == "True" || note2 == null) && (!String.IsNullOrEmpty(did2)))
                     {
-                        DeviceToken = did2,
-                        Payload = JObject.Parse("{\"aps\":{\"alert\":\"A Friend request sent to you from an other Kangoo user\",\"badge\":1}}")
-                    });
+                        PushNotifications.Apple.QueueNotification(new ApnsNotification
+                        {
+                            DeviceToken = did2,
+                            Payload = JObject.Parse("{\"aps\":{\"alert\":\"A Friend request sent to you from an other Kangoo user\",\"sound\":\"default\"}}")
+                        });
+                    }*/
+
+
                 }
-
-
-            }
 
                 return new PostResponse()
                 {
                     Id = frnd.Friend_Id
                 };
-            
+            }
         }
 
         public IPagedResponse<Contracts.Models.UserView> GetAll(String Userfrom,int pageNumber, int pageSize)
@@ -139,13 +141,25 @@ namespace CL.Services.Data.Repository
             {
                 pageSize = totalCount;
             }
+
             var pageQuery = this.PagedResult(query, pageNumber, pageSize, a => a.Id, true, out totalCount);
 
             List<Contracts.Models.UserView> lstResults = new List<Contracts.Models.UserView>();
             foreach (Context.User asset in pageQuery)
             {
                 var result = Mappers.CLMapper.MapUser(asset);
-                lstResults.Add(result);
+                if (result.PhoneNumber == "null" || result.PhoneNumber == null)
+                {
+                    //do nothing
+                }
+                else if (result.Id == Userfrom)
+                {
+                    //do nothing
+                }
+                else
+                {
+                    lstResults.Add(result);
+                }
             }
 
             return new PagedResponse<Contracts.Models.UserView>()

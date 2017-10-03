@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CL.Services.Data.Context
 {
-    internal class CLIdentityDBContext : IdentityDbContext<IdentityUser>
+    internal class CLIdentityDBContext : IdentityDbContext<AppUser>
     {
         public CLIdentityDBContext()
             : base("CLEntitiesIdentity")

@@ -36,7 +36,7 @@ namespace CL.Services.Web.Controllers
         }
 
         [Route("{userId}/Inbox")]
-        [HttpPut]
+        [HttpPost]
         public IPutResponse MarkMessageAsReadOrUnRead([FromUri] String userId, [FromBody] InboxMessageModel message)
         {
             var response = Business.User.User.MarkMessageAsReadOrUnRead(userId, message);

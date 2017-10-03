@@ -20,6 +20,8 @@ using Newtonsoft.Json.Linq;
 
 namespace CL.Services.Web.Controllers
 {
+    [AllowAnonymous]
+    [Authorize]
     [RoutePrefix("api/Friends")]
     public class FriendsController : CLApiController
     {

@@ -43,7 +43,7 @@ namespace CL.Services.Business.User
                 throw new ArgumentNullException("userId");
 
             UserRepository rep = new UserRepository();
-            return rep.MarkMessageAsReadOrUnRead(userId, message.MessageId, message.IsRead);
+            return rep.MarkMessageAsReadOrUnRead(userId, message.MessageId, message.read);
         }
 
         public static Dictionary<String, bool> CheckNumbers(String[] numbers)
@@ -150,7 +150,7 @@ namespace CL.Services.Business.User
             set { this._User.PhoneNumber = value; }
         }
 
-        public string notify_me
+        public bool notify_me
         {
             get { return this._User.notify_me; }
             set { this._User.notify_me = value; }

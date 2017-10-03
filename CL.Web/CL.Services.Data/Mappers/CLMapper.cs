@@ -80,6 +80,7 @@ namespace CL.Services.Data.Mappers
             //result.Message = share.Message;
             result.TimeAgo = ToFriendlyTimeAgo(share.CreateDt);
             result.IsRead = share.ReadDt.HasValue;
+            result.Phone = share.FromUser.PhoneNumber;
 
             return result;
         }

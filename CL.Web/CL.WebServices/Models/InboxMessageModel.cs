@@ -20,6 +20,10 @@ namespace CL.Services.Web.Models
 
         public bool IsRead { get; set; }
 
+        public int read { get; set; }
+
+        public String Phone { get; set; }
+
         public InboxMessageModel()
         {
 

@@ -26,13 +26,13 @@ namespace CL.Services.Web
             string path = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/CertificatesLive.p12");
             
             var config = new ApnsConfiguration(ApnsConfiguration.ApnsServerEnvironment.Production,
-              path, "12345",true);
+              path,"12345",true);
 
-              PushNotifications.Apple = new ApnsServiceBroker(config);
-            //PushNotifications.Apple.QueueNotification(new ApnsNotification
-            //{
-               // DeviceToken = "BDEEF023DED5E12E6803E8187EC73C8A8354E049600A27493C56DE1D78E5F9A7",
-                //Payload = JObject.Parse("{\"aps\":{\"alert\":\"You Just share a media\",\"badge\":1}}")
+            PushNotifications.Apple = new ApnsServiceBroker(config);
+           //PushNotifications.Apple.QueueNotification(new ApnsNotification
+           //{
+              //DeviceToken = "B770A67EB55213735B65A4AAB9A0D2CC86D7BCE280B33C61BA841C2E0955E28E",
+              //Payload = JObject.Parse("{\"aps\":{\"alert\":\"You Just share a media\",\"sound\":\"default\"}}")
                //Payload = JObject.Parse(String.Format("{\"aps\":{\"alert\":\"{0}\",\"badge\":1}}", "myasdasdasd"))
             //});
          
